@@ -1,5 +1,5 @@
 # ShigEIFinder
-This is a tool that is used to identify differentiate *Shigella*/EIEC using cluster-specific genes and identify the serotype using O-antigen/H-antigen genes. This pipeline can serotype over 59 *Shigella* and 22 EIEC serotypes. The results are outputted in a tabular format which if saved as a file can be opened in Excel or other tabular programs. 
+This is a tool that is used to identify differentiate *Shigella*/EIEC using cluster-specific genes and identify the serotype using O-antigen/H-antigen genes. This pipeline can serotype over 59 *Shigella* and 22 EIEC serotypes using either assembled whole genomes or Whole Genome Sequencing (WGS) reads. The results are outputted in a tabular format which if saved as a file can be opened in Excel or other tabular programs. 
 
 Example:
 ````
@@ -13,11 +13,11 @@ ERR1000679	+	1	CSD1	SD1	SD1
 1. samtools (v1.10)
 2. Python (v3.7.3 or above)
 3. bwa (v0.7.17-r1188)
-4. BLAST+ (v)
+4. BLAST+ (v2.9.0)
 
 ## Option 1: Clone repository from gitHub
 ````
-git clone 
+git clone https://github.com/LanLab/ShigEiFinder.git
 ````
 Make sure that you have the dependencies installed.
 ---
