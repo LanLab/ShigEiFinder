@@ -319,8 +319,8 @@ def oantigen_cluster_specific(cluster):
     
     if "," in cluster:
         for c in cluster.split(','):
-            antigen.update(oantigen_cluster_specific(c))
-    elif "CSP" in cluster or cluster is "Unknown" or cluster is "Unclustered":
+            antigens.update(oantigen_cluster_specific(c))
+    elif "CSP" in cluster or cluster is "Unknown" or cluster is "Shigella/EIEC Unclustered":
         return antigens
     elif cluster == "C3":
         return [ "SF1-5", "SBP" ]
@@ -381,7 +381,7 @@ def hantigens_cluster_specific(cluster):
     with open(json_file) as f:
         data = json.load(f)
     
-    if cluster in shigella_clusters or "CSP" in cluster or cluster is "Unknown" or cluster is "Unclustered":
+    if cluster in shigella_clusters or "CSP" in cluster or cluster is "Unknown" or cluster is "Shigella/EIEC Unclustered":
         return antigens
 
     if ',' in cluster:
@@ -622,11 +622,10 @@ def map_depth_ratios(bam):
         info = line.split('\t')
         if len(info) > 1 and '#rname' not in line:
             gene = gene_rename(info[0])
-            depth = float(info[5])
             meandepth = float(info[6])
-            if 'group' in gene or 'ipaH' in gene:
-                ratio = 100*meandepth/depth_cut
-                genes_set.append(gene + '\t' + str(ratio))
+            # if 'group' in gene or 'ipaH' in gene:
+            ratio = 100*meandepth/depth_cut
+            genes_set.append(gene + '\t' + str(ratio))
     return genes_set
 
 def mapping_depth_cutoff(bam):
@@ -789,7 +788,7 @@ def run_typing(dir, files, mode, threads, hits, ratios, output):
         result['serotype'] = 'Not Shigella/EIEC'
         result['oantigens'] = []
         result['hantigens'] = []
-        result['notes'] = 'ipaH, cluster-specific genes and less than 26 plasmid genes found.'
+        result['notes'] = 'None of ipaH, cluster-specific genes and less than 26 plasmid genes found.'
     else:
         # Check for the ipaH gene, if negative check for SB13 genes
         if ipaH_detect(genes.keys()) is False and SB13_detect(genes.keys()) is not 'Unknown':
@@ -797,7 +796,6 @@ def run_typing(dir, files, mode, threads, hits, ratios, output):
             result['serotype'] = SB13_detect(genes.keys())
             result['cluster'] = "C"+SB13_detect(genes.keys())
             result['plasmid'] = plasmid_genes(genes.keys())
-            result['notes'] = ""
         else:
             result['ipaH'] = '+'
             if ipaH_detect(genes.keys()) is False:
@@ -810,8 +808,8 @@ def run_typing(dir, files, mode, threads, hits, ratios, output):
                 result['cluster'] = cluster.split(':')[1]
                 result['serotype'] = sporadic_serotype(cluster.split(':')[1])
             elif cluster == "Unknown Cluster":
-                result['cluster'] = "Unclustered"
-                result['serotype'] = "Untypeable"
+                result['cluster'] = "Shigella/EIEC Unclustered"
+                result['serotype'] = antigen_search(genes.keys())
             else:
                 result['cluster'] = cluster
                 # Determine Serotype
@@ -848,7 +846,7 @@ def run_typing(dir, files, mode, threads, hits, ratios, output):
 
         if ratios:
             outp.write(
-                "--------------- RATIOS OF DEPTH CLUSTER-SPECFIC GENES TO AVERAGE DEPTH OF 7 HOUSE KEEPING GENES---------------\n")
+                "--------------- RATIOS OF DEPTH SPECFIC GENES TO AVERAGE DEPTH OF 7 HOUSE KEEPING GENES---------------\n")
             for g in map_depth_ratios(hit_results):
                 outp.write(str(g)+"\n")
             outp.write(
@@ -869,7 +867,7 @@ def run_typing(dir, files, mode, threads, hits, ratios, output):
             print("----------------------------------------")
 
         if ratios:
-            print("--------------- RATIOS OF DEPTH CLUSTER-SPECFIC GENES TO AVERAGE DEPTH OF 7 HOUSE KEEPING GENES---------------")
+            print("--------------- RATIOS OF DEPTH SPECIFIC GENES TO AVERAGE DEPTH OF 7 HOUSE KEEPING GENES---------------")
             for g in map_depth_ratios(hit_results):
                 print(g)
             print("--------------------------------------------------------------------------------------------------------------")
