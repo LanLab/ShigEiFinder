@@ -1,0 +1,26 @@
+package:
+  name: ShigEIFinder
+  version: 1.0
+
+source:
+  git_rev:
+  git_url:
+
+requirements:
+  build:
+    - python
+    - samtools
+    - bwa
+
+  run:
+    - python
+
+test:
+  imports:
+    - argparse
+    - os
+    - sys
+
+
+about:
+  home:

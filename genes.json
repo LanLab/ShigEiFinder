@@ -1,0 +1,275 @@
+{
+	"C1": {
+		"cluster-genes": ["group_2132", "group_2201", "group_3681", "group_5563"],
+		"SB1": ["SB1_wzx", "SB1_wzy"],
+		"SB2": ["SB2_wzx", "SB2_wzy"],
+		"SB3": ["SB3_wzx", "SB3_wzy"],
+		"SB4": ["SB4_wzx", "SB4_wzy"],
+		"SB6": ["SB6_wzx", "SB6_wzy"],
+		"SB8": ["SB8_wzx", "SB8_wzy"],
+		"SB10": ["SB10_wzx", "SB10_wzy"], 
+		"SB11": ["SB11_wzx", "SB11_wzy"],
+		"SB14": ["SB14_wzx", "SB14_wzy"],
+		"SB18": ["SB18_wzx", "SB18_wzy"],
+		"SB19": ["SB19_wzx", "SB19_wzy"],
+		"SB20": ["SB1_wzx", "SB1_wzy", "group_11746"],
+		"SD3": ["SD3_wzx", "SD3_wzy"],
+		"SD4": ["SD4_wzx", "SD4_wzy"],
+		"SD5": ["SD5_wzx", "SD5_wzy"],
+		"SD6": ["SD6_wzx", "SD6_wzy"],
+		"SD7": ["SD7_wzx", "SD7_wzy"],
+		"SD9": ["SD9_wzx", "SD9_wzy"],
+		"SD11": ["SD11_wzx", "SD11_wzy"],
+		"SD12": ["SD12_wzx", "SD12_wzy"],
+		"SD13": ["SD13_wzx", "SD13_wzy"],
+		"SD14": ["SD14_wzx", "SD14_wzy"],
+		"SD15": ["SD15_wzx", "SD15_wzy"],
+		"SD-96-265": ["SDP_wzx", "SDP_wzy"],
+		"SF6": ["SF6_wzx", "SF6_wzy"]
+	},
+
+	"C2": {
+		"cluster-genes": ["group_9598", "group_4295", "group_4025"],
+		"SB5": ["SB5_wzx", "SB5_wzy"],
+		"SB7": ["SB7_wzx", "SB7_wzy"],
+		"SB9": ["SB9_wzx", "SB9_wzy"],
+		"SB11": ["SB11_wzx", "SB11_wzy"],
+		"SB15": ["SB15_wzx", "SB15_wzy"],
+		"SB16": ["SB16_wzx", "SB16_wzy"],
+		"SB17": ["SB17_wzx", "SB17_wzy"],
+		"SD2": ["SD2_wzx", "SD2_wzy"],
+		"SD-E670-74": ["SDPE_wzx", "SDPE_wzy"]
+	},
+
+	"C3": {
+		"cluster-genes": ["group_2021", "group_2486", "group_9591"],
+		"SF1a": {
+			"v1": ["SF1-5_wzx", "SF1-5_wzy", "gtrI"],
+			"v2":["SF1-5_wzx", "SF1-5_wzy", "gtrI", "oacB"]
+		},
+		"SF1b": {
+			"v1": ["SF1-5_wzx", "SF1-5_wzy", "gtrI", "oac1b"],
+			"v2":["SF1-5_wzx", "SF1-5_wzy", "gtrI", "oac1b", "oacB"]
+		},
+		"SF1c (7a)": {
+			"v1": ["SF1-5_wzx", "SF1-5_wzy","gtrI", "gtrIC"]
+		},
+		"SF1d": {
+			"v1": ["SF1-5_wzx", "SF1-5_wzy", "gtrI", "gtrX"]
+		},
+		"SF2a": {
+			"v1": ["SF1-5_wzx", "SF1-5_wzy", "gtrII"],
+			"v2":["SF1-5_wzx", "SF1-5_wzy", "gtrII", "oacB", "oacD"]
+		},
+		"SF2b": {
+			"v1": ["SF1-5_wzx", "SF1-5_wzy","gtrII", "gtrX"],
+			"v2":["SF1-5_wzx", "SF1-5_wzy", "gtrII", "gtrX", "oacD"]
+		},
+		"SF3a": {
+			"v1": ["SF1-5_wzx", "SF1-5_wzy","gtrX","oac"],
+			"v2":["SF1-5_wzx", "SF1-5_wzy", "gtrX","oac", "oacD"]
+		},
+		"SF3b": {
+			"v1": ["SF1-5_wzx", "SF1-5_wzy","oac"]
+		},
+		"SF4a": {
+			"v1": ["SF1-5_wzx", "SF1-5_wzy", "gtrIV"]
+		},
+		"SF4av": {
+			"v1": ["SF1-5_wzx", "SF1-5_wzy", "gtrIV", "optIII"]
+		},
+		"SF4b": {
+			"v1": ["SF1-5_wzx", "SF1-5_wzy", "gtrIV", "oac"]
+		},
+		"SF5a": {
+			"v1": ["SF1-5_wzx", "SF1-5_wzy", "gtrV"],
+			"v2":["SF1-5_wzx", "SF1-5_wzy", "gtrV", "oacB"]
+		},
+		"SF5b": {
+			"v1": ["SF1-5_wzx", "SF1-5_wzy","gtrV", "gtrX"]
+		},
+		"SF7b": {
+			"v1": ["SF1-5_wzx", "SF1-5_wzy", "gtrIC"],
+			"v2":["SF1-5_wzx", "SF1-5_wzy", "gtrIC", "oac"]
+		},
+		"SFX": {
+			"v1": ["SF1-5_wzx", "SF1-5_wzy", "gtrX"],
+			"v2":["SF1-5_wzx", "SF1-5_wzy", "gtrX", "oacD"]
+		},
+		"SFXv (4c)": {
+			"v1": ["SF1-5_wzx", "SF1-5_wzy", "gtrX", "optIII"],
+			"v2":["SF1-5_wzx", "SF1-5_wzy", "gtrX", "optIII", "oacD"]
+		},
+		"SFY": {
+			"v1": ["SF1-5_wzx", "SF1-5_wzy", "oacB"],
+			"v2":["SF1-5_wzx", "SF1-5_wzy","oacB","oacD"],
+			"v3":["SF1-5_wzx", "SF1-5_wzy"]
+		},
+		"SFYv": {
+			"v1": ["SF1-5_wzx", "SF1-5_wzy", "oacD", "optIII"],
+			"v2":["SF1-5_wzx", "SF1-5_wzy", "oacD", "optIII", "optII"],
+			"v3":["SF1-5_wzx", "SF1-5_wzy","optIII", "optII"],
+			"v4":["SF1-5_wzx", "SF1-5_wzy","optIII"],
+			"v5":["SF1-5_wzx", "SF1-5_wzy", "optII"],
+			"v6":["SF1-5_wzx", "SF1-5_wzy", "oacD", "optII"]
+		}
+
+	},
+
+	"C4": {
+		"cluster-genes": ["group_4203", "group_3718"],
+		"EIEC O28ac": ["O28ac_wzx", "O28ac_wzy"],
+		"EIEC O28ac:H7": ["O28ac_wzx","O28ac_wzy", "H7_fliC"],
+		"EIEC O136:H7": ["O136_wzx", "O136_wzy", "H7_fliC"],
+		"EIEC O164:H7": ["O164_wzx", "O164_wzy", "H7_fliC"],
+		"EIEC O164": ["O164_wzx", "O164_wzy"],
+		"EIEC O29:H4": ["O29_wzx", "O29_wzy", "H4_fliC"],
+		"EIEC O173:H7": ["O173_wzx", "O173_wzy", "H7_fliC"],
+		"EIEC O124:H7": ["O124_wzx", "O124_wzy","H7_fliC"],
+		"EIEC H7": ["H7_fliC"],
+		"EIEC O132:H7": ["O132_wzx", "O132_wzy", "H7_fliC"]
+
+	},
+
+	"C5": {
+		"cluster-genes": ["group_12434", "group_3450", "group_5154"],
+		"EIEC O121:H30": ["O121_wzx", "O121_wzy", "H30_fliC"],
+		"EIEC O124:H30": ["O124_wzx", "O124_wzy", "H30_fliC"],
+		"EIEC O164:H30": ["O164_wzx", "O164_wzy", "H30_fliC"],
+		"EIEC O132:H21": ["O132_wzx", "O132_wzy", "H21_fliC"],
+		"EIEC O152": ["O152_wzx", "O152_wzy"],
+		"EIEC O152:H30": ["O152_wzx", "O152_wzy", "H30_fliC"]
+
+	},
+
+	"C6": {
+		"cluster-genes": ["group_12556", "group_4254"],
+		"EIEC O143:H26": ["O143_wzx", "O143_wzy", "H26_fliC"],
+		"EIEC O167:H26": ["O167_wzx", "O167_wzy", "H26_fliC"],
+		"EIEC O112ac:H26": ["O112ac_wzx", "O112ac_wzy", "H26_fliC"]
+
+	},
+
+	"C7": {
+		"cluster-genes": ["group_13809"],
+		"EIEC O144:H25": []
+
+	},
+
+	"C10": {
+		"cluster-genes": ["group_23648"],
+		"EIEC O135:H30": []
+
+	},
+
+	"C8": {
+		"cluster-genes": ["group_1044", "group_12586"],
+		"EIEC O96:H19": []
+
+	},
+	
+	"C9": {
+		"cluster-genes": ["group_12837","group_9613"],
+		"EIEC O8:H19": []
+
+	},
+
+	"CSS": {
+		"cluster-genes": ["group_1970", "group_2886", "group_2895", "group_4617", "group_5315"],
+		"SS": []
+
+	},
+
+	"CSD1": {
+		"cluster-genes": ["group_11015", "group_5881"],
+		"SD1": []
+
+	},
+
+	"CSD8": {
+		"cluster-genes": ["group_3873", "group_5658"],
+		"SD8": []
+
+	},
+
+	"CSD10": {
+		"cluster-genes": ["group_14317", "group_10528"],
+		"SD10": []
+
+	},
+	
+	"CSB12": {
+		"cluster-genes": ["group_16464"],
+		"SB12": []
+
+	},
+	
+	"CSB13": {
+		"cluster-genes": ["group_8672"],
+		"SB13": []
+
+	},
+	
+	"CSB13-atypical": {
+		"cluster-genes": ["group_11816"],
+		"SB13": []
+
+	},
+	
+	"sporadic": {
+		"CSP1": {"serotype": "O86:H27",	"cluster-genes": ["group_12800"]},
+		"CSP12": {"serotype": "O111:H45",	"cluster-genes": ["group_18117"]},
+		"CSP18": {"serotype": "O22:H7",	"cluster-genes": ["group_22011"]},
+		"CSP22": {"serotype": "O96:H49",	"cluster-genes": ["group_22720"]},
+		"CSP27": {"serotype": "O6:H1", "cluster-genes": ["group_10464" ,"group_9050"]},
+		"CSP29": {"serotype": "O118/O151:H11,H6",	"cluster-genes": ["group_24949"]},
+		"CSP38": {"serotype": "O50/O2:H7",	"cluster-genes": ["group_27122"]},
+		"CSP39": {"serotype": "H21,H45", "cluster-genes": ["group_27627"]},
+		"CSP47": {"serotype": "O21:H10", "cluster-genes": ["group_28942"]},
+		"CSP49": {"serotype": "O89:H5",	"cluster-genes": ["group_29529"]},
+		"CSP53": {"serotype": "",	"cluster-genes": ["group_18732"]},
+		"CSP10": {"serotype": "O29:H16,H8",	"cluster-genes": ["group_18006"]},
+		"CSP11": {"serotype": "O155/O8:H20",	"cluster-genes": ["group_18065"]},
+		"CSP13": {"serotype": "O39:H49",	"cluster-genes": ["group_18182"]},
+		"CSP14": {"serotype": "O18ac:H7",	"cluster-genes": ["group_18993"]},
+		"CSP15": {"serotype": "H27",	"cluster-genes": ["group_19133"]},
+		"CSP16": {"serotype": "O4:H4",	"cluster-genes": ["group_19394"]},
+		"CSP17": {"serotype": "H2",	"cluster-genes": ["group_19948"]},
+		"CSP19": {"serotype": "O12:H4",	"cluster-genes": ["group_22794"]},
+		"CSP2": {"serotype": "O6:H16",	"cluster-genes": ["group_12871"]},
+		"CSP20": {"serotype": "O152:H51",	"cluster-genes": ["group_22553"]},
+		"CSP21": {"serotype": "O124:H7",	"cluster-genes": ["group_22576"]},
+		"CSP23": {"serotype": "O89/O162:H9",	"cluster-genes": ["group_22755"]},
+		"CSP24": {"serotype": "O17/O77:H18",	"cluster-genes": ["group_23636"]},
+		"CSP25": {"serotype": "O93:H28",	"cluster-genes": ["group_24032"]},
+		"CSP26": {"serotype": "O118/O151:H11",	"cluster-genes": ["group_24101"]},
+		"CSP28": {"serotype": "O167:H9",	"cluster-genes": ["group_24239"]},
+		"CSP3": {"serotype": "O4:H40",	"cluster-genes": ["group_14975"]},
+		"CSP30": {"serotype": "O16:H6",	"cluster-genes": ["group_24364"]},
+		"CSP31": {"serotype": "O18ac:H31",	"cluster-genes": ["group_24386"]},
+		"CSP32": {"serotype": "O8:H30",	"cluster-genes": ["group_24434"]},
+		"CSP33": {"serotype": "O148:H9",	"cluster-genes": ["group_24473"]},
+		"CSP34": {"serotype": "O92:H10",	"cluster-genes": ["group_24502"]},
+		"CSP35": {"serotype": "O16:H6",	"cluster-genes": ["group_24541"]},
+		"CSP36": {"serotype": "H48",	"cluster-genes": ["group_24571"]},
+		"CSP37": {"serotype": "H19",	"cluster-genes": ["group_26933"]},
+		"CSP4": {"serotype": "O1:H7",	"cluster-genes": ["group_16000"]},
+		"CSP40": {"serotype": "O4:H1",	"cluster-genes": ["group_25721"]},
+		"CSP41": {"serotype": "O71:H11",	"cluster-genes": ["group_26092"]},
+		"CSP42": {"serotype": "H9",	"cluster-genes": ["group_26159"]},
+		"CSP43": {"serotype": "O117:H7",	"cluster-genes": ["group_26176"]},
+		"CSP44": {"serotype": "O36:H42",	"cluster-genes": ["group_26572"]},
+		"CSP45": {"serotype": "O110:H7",	"cluster-genes": ["group_27604"]},
+		"CSP46": {"serotype": "H12",	"cluster-genes": ["group_27816"]},
+		"CSP48": {"serotype": "O25:H4",	"cluster-genes": ["group_29290"]},
+		"CSP5": {"serotype": "H33",	"cluster-genes": ["group_16411"]},
+		"CSP50": {"serotype": "O124:H24",	"cluster-genes": ["group_30020"]},
+		"CSP51": {"serotype": "O183:H45,H6",	"cluster-genes": ["group_30145"]},
+		"CSP52": {"serotype": "O71:H45",	"cluster-genes": ["group_30265"]},
+		"CSP6": {"serotype": "H45",	"cluster-genes": ["group_16487"]},
+		"CSP7": {"serotype": "H48",	"cluster-genes": ["group_16805"]},
+		"CSP8": {"serotype": "H31",	"cluster-genes": ["group_17375"]},
+		"CSP9": {"serotype": "O17/O77:H18",	"cluster-genes": ["group_17941"]}
+	}
+	
+}
