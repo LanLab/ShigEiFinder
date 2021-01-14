@@ -319,7 +319,7 @@ def oantigen_cluster_specific(cluster):
     
     if "," in cluster:
         for c in cluster.split(','):
-            antigen.update(oantigen_cluster_specific(c))
+            antigens.update(oantigen_cluster_specific(c))
     elif "CSP" in cluster or cluster is "Unknown" or cluster is "Shigella/EIEC Unclustered":
         return antigens
     elif cluster == "C3":
@@ -622,7 +622,6 @@ def map_depth_ratios(bam):
         info = line.split('\t')
         if len(info) > 1 and '#rname' not in line:
             gene = gene_rename(info[0])
-            depth = float(info[5])
             meandepth = float(info[6])
             # if 'group' in gene or 'ipaH' in gene:
             ratio = 100*meandepth/depth_cut
