@@ -22,6 +22,13 @@ def file_type(f, m):
             return True
     return False
 
+def get_json_data():
+    curr_dir = os.path.dirname(os.path.realpath(__file__)) 
+    json_file = os.path.join(curr_dir, 'genes.json')
+    with open(json_file) as f:
+        data = json.load(f)
+    return data
+
 def ipaH_detect(genes):
     if 'ipaH' in genes:
         # print("ipaH(+)")
@@ -36,7 +43,7 @@ def SB13_detect(genes):
     return 'Unknown'
 
 def plasmid_genes(genes):
-    plasmid = ["acp", "icsA (virG)","icsB","ipaA","ipaB","ipaC","ipaD","ipaJ","ipgA","ipgB1","pgC","ipgD","ipgE","ipgF","mxiA","mxiC","mxiD","mxiE","mxiG","mxiH","mxiI","mxiJ","mxiK","mxiL","mxiM","mxiN","spa13","spa15","spa24","spa29","spa32","spa33","spa40","spa47","spa9","virA","virB","virF"]
+    plasmid = ["acp", "icsA (virG)","icsA","icsB","ipaA","ipaB","ipaC","ipaD","ipaJ","ipgA","ipgB1","pgC","ipgD","ipgE","ipgF","mxiA","mxiC","mxiD","mxiE","mxiG","mxiH","mxiI","mxiJ","mxiK","mxiL","mxiM","mxiN","spa13","spa15","spa24","spa29","spa32","spa33","spa40","spa47","spa9","virA","virB","virF"]
     inter = list(set(plasmid) & set(genes))
     return len(inter)
 
@@ -144,9 +151,7 @@ def determine_serotype(genes_, cluster):
     genes = o_filter(cluster, genes_)
     # print(genes)
     type_list = {}
-    json_file = os.path.dirname(os.path.realpath(__file__)) + '/genes.json'
-    with open(json_file) as f:
-        data = json.load(f)
+    data = get_json_data()
     
     if cluster == 'C3':
         type_list = type_cluster3(genes, data)
@@ -270,15 +275,21 @@ def get_oantigens(genes, cluster, search):
         for c in clusters:
             o_list.extend(get_oantigens(genes, c, search))
     elif "CSP" in cluster and cluster != "CSP53":
-        json_file = os.path.dirname(os.path.realpath(__file__)) + '/genes.json'
-        with open(json_file) as f:
-            data = json.load(f)
+        data = get_json_data()
         serotype = data["sporadic"][cluster]["serotype"]
         if ":" in serotype:
             antigens = serotype.split(':')
             return [antigens[0]]
         elif ":" not in serotype and "O" in serotype:
             return [serotype]
+    elif cluster == "Shigella/EIEC Unclustered":
+        for g in genes:
+            if '_wz' in g: #or '_wzy' in g:
+                name = re.search(r'(.*)\_(wz.*)', g).group(1)
+                if name in o:
+                    o[name].append(g)
+                    continue
+                o[name] = [ g ]
     else:
         cluster_antigens = oantigen_cluster_specific(cluster)
         for g in genes:
@@ -309,18 +320,19 @@ def get_oantigens(genes, cluster, search):
     return o_list
 
 def oantigen_cluster_specific(cluster):
+    if cluster == 'Shigella/EIEC Unclustered':
+        return []
+
     antigens = set()
     single_eclusters = ["C7", "C8", "C9", "C10"]
     single_sclusters = ["CSD1", "CSD8", "CSD10", "CSB12", "CSB13", "CSS"]
-    
-    json_file = os.path.dirname(os.path.realpath(__file__)) + '/genes.json'
-    with open(json_file) as f:
-        data = json.load(f)
-    
+    # genes conbinations from json file
+    data = get_json_data()
+
     if "," in cluster:
         for c in cluster.split(','):
             antigens.update(oantigen_cluster_specific(c))
-    elif "CSP" in cluster or cluster is "Unknown" or cluster is "Shigella/EIEC Unclustered":
+    elif "CSP" in cluster or cluster == "Unknown" or cluster == "Shigella/EIEC Unclustered":
         return antigens
     elif cluster == "C3":
         return [ "SF1-5", "SBP" ]
@@ -354,9 +366,7 @@ def get_hantigens(genes, cluster, search):
         for c in clusters:
             h_list.update(get_hantigens(genes, c, search))
     elif "CSP" in cluster and cluster != "CSP53":
-        json_file = os.path.dirname(os.path.realpath(__file__)) + '/genes.json'
-        with open(json_file) as f:
-            data = json.load(f)
+        data = get_json_data()
         serotype = data["sporadic"][cluster]["serotype"]
         if ":" in serotype:
             antigens = serotype.split(':')
@@ -377,11 +387,9 @@ def hantigens_cluster_specific(cluster):
     antigens = set()
     shigella_clusters = ["C1", "C2", "C3", "CSS", "CSB12", "CSB13", "CSB13-atypical", "CSD1", "CSD8", "CSD10"]
     
-    json_file = os.path.dirname(os.path.realpath(__file__)) + '/genes.json'
-    with open(json_file) as f:
-        data = json.load(f)
+    data = get_json_data()
     
-    if cluster in shigella_clusters or "CSP" in cluster or cluster is "Unknown" or cluster is "Shigella/EIEC Unclustered":
+    if cluster in shigella_clusters or "CSP" in cluster or cluster == "Unknown" or cluster == "Shigella/EIEC Unclustered":
         return antigens
 
     if ',' in cluster:
@@ -578,10 +586,15 @@ def mapping_mode(bam, mpileup):
         info = line.split('\t')
         if len(info) > 1 and '#rname' not in line:
             gene = gene_rename(info[0])
-            depth = float(info[5])
+            depth = float(info[5]) # Meant to the percentage length cov calculated by samtools coverage
             meandepth = float(info[6])
-            if 100*meandepth/depth_cut < 10: #'group' in gene and
+
+            # If the mapping ratio is < 10%
+            if gene is 'ipaH' and 100*meandepth/depth_cut < 1:
                 continue
+            elif 100*meandepth/depth_cut < 1: #'group' in gene and
+                continue
+
             if gene == 'ipaH' and depth > 10: 
                 genes_set[gene] = depth
             elif 'group_5563' == gene and float(info[4]) > 253:
@@ -643,10 +656,7 @@ def mapping_depth_cutoff(bam):
     return depth/7
 
 def determine_cluster(genes):
-    json_file = os.path.dirname(os.path.realpath(__file__)) + '/genes.json'
-    # Get all the genes for each cluster from genes.json
-    with open(json_file) as f:
-        data = json.load(f)
+    data = get_json_data()
 
     cluster_list = {}
     # Check for the all cluster-specific genes found in genes
@@ -684,10 +694,7 @@ def determine_cluster(genes):
     return "Unknown Cluster"
 
 def sporadic_clusters(genes):
-    json_file = os.path.dirname(os.path.realpath(__file__)) + '/genes.json'
-    # Get all the genes for each cluster from genes.json
-    with open(json_file) as f:
-        data = json.load(f)
+    data = get_json_data()
 
     # Check for the all cluster-specific genes found in genes
     for s in data["sporadic"]:
@@ -696,10 +703,7 @@ def sporadic_clusters(genes):
     return "Unknown"
 
 def sporadic_serotype(cluster):
-    json_file = os.path.dirname(os.path.realpath(__file__)) + '/genes.json'
-    # Get all the genes for each cluster from genes.json
-    with open(json_file) as f:
-        data = json.load(f)
+    data = get_json_data()
     return data["sporadic"][cluster]["serotype"]
 
 def string_result(res, output):
@@ -711,6 +715,22 @@ def string_result(res, output):
 
     # print(result)
     return result
+
+def get_gene_type(gene):
+    gene_type = ""
+
+    mlst = ["NC_000913.3:recA", "NC_000913.3:purA", "NC_000913.3:mdh", "NC_000913.3:icd", "NC_000913.3:gyrB", "NC_000913.3:fumC", "NC_000913.3:adk"]
+    plasmid = ["acp", "icsA (virG)","icsA","icsB","ipaA","ipaB","ipaC","ipaD","ipaJ","ipgA","ipgB1","pgC","ipgD","ipgE","ipgF","mxiA","mxiC","mxiD","mxiE","mxiG","mxiH","mxiI","mxiJ","mxiK","mxiL","mxiM","mxiN","spa13","spa15","spa24","spa29","spa32","spa33","spa40","spa47","spa9","virA","virB","virF"]
+    if gene in mlst:
+        gene_type = "House Keeping"
+    elif "_fliC" in gene or "_wz" in gene:
+        gene_type = "O/H-antigen Specific"
+    elif gene in plasmid:
+        gene_type = "Virulence Plasmid"
+    elif "group" in gene:
+        gene_type = "Cluster-Specific"
+
+    return gene_type
 
 def run_mapping(dir,r1,r2,threads): 
     # Run mapping to gather genes
@@ -767,6 +787,19 @@ def run_blast(dir, fileA):
     # print('\n'.join(blast_hits))
     return blast_hits
 
+def three_properties(genes):
+    num = 0
+    if ipaH_detect(genes.keys()):
+        num += 1
+    
+    if plasmid_genes(genes.keys()) >= 26:
+        num += 1
+    
+    if determine_cluster(genes) != "Unknown Cluster":
+        num += 1
+
+    return num
+
 def run_typing(dir, files, mode, threads, hits, ratios, output):
     result = {}
     result['notes'] = ""
@@ -781,17 +814,18 @@ def run_typing(dir, files, mode, threads, hits, ratios, output):
         # print(genes)
         result['sample'] = os.path.basename(files).split('.')[0]
     # Check presecnce of ipaH, cluster & plasmid
-    if not ipaH_detect(genes.keys()) and determine_cluster(genes) == "Unknown Cluster" and plasmid_genes(genes.keys()) < 26:
+    # if not ipaH_detect(genes.keys()) and determine_cluster(genes) == "Unknown Cluster" and plasmid_genes(genes.keys()) < 26:
+    if three_properties(genes) < 2 and SB13_detect(genes.keys()) == 'Unknown':
         result['ipaH'] = '-'
         result['plasmid'] = plasmid_genes(genes.keys())
-        result['cluster'] = '-'
+        result['cluster'] = 'Not Shigella/EIEC'
         result['serotype'] = 'Not Shigella/EIEC'
         result['oantigens'] = []
         result['hantigens'] = []
-        result['notes'] = 'None of ipaH, cluster-specific genes and less than 26 plasmid genes found.'
+        result['notes'] = 'ipaH negative, cluster-specific genes negative and less than 26 plasmid genes'
     else:
         # Check for the ipaH gene, if negative check for SB13 genes
-        if ipaH_detect(genes.keys()) is False and SB13_detect(genes.keys()) is not 'Unknown':
+        if ipaH_detect(genes.keys()) is False and SB13_detect(genes.keys()) != 'Unknown':
             result['ipaH'] = '-'
             result['serotype'] = SB13_detect(genes.keys())
             result['cluster'] = "C"+SB13_detect(genes.keys())
@@ -809,7 +843,7 @@ def run_typing(dir, files, mode, threads, hits, ratios, output):
                 result['serotype'] = sporadic_serotype(cluster.split(':')[1])
             elif cluster == "Unknown Cluster":
                 result['cluster'] = "Shigella/EIEC Unclustered"
-                result['serotype'] = antigen_search(genes.keys())
+                result['serotype'] = antigen_search(genes)
             else:
                 result['cluster'] = cluster
                 # Determine Serotype
@@ -833,9 +867,9 @@ def run_typing(dir, files, mode, threads, hits, ratios, output):
         outp = open(output, "a+")
         if hits:
             outp.write("--------------- GENE SET ---------------\n")
-            outp.write("#gene\tlength_coverage/depth\n")
+            outp.write("#gene\tlength_coverage/depth\tgene_type\n")
             for key, item in genes.items():
-                outp.write(key + '\t' + str(item)+"\n")
+                outp.write(key + '\t' + str(item)+ '\t' + get_gene_type(key) + "\n")
             if mode == "a":
                 outp.write("---------- BLAST GENE HITS ----------\n")
                 outp.write("#seqid\tslen\tlength\tsstart\tsend\tpident\n")
@@ -855,9 +889,9 @@ def run_typing(dir, files, mode, threads, hits, ratios, output):
     else:
         if hits:
             print("--------------- GENE SET ---------------")
-            print("#gene\tlength_coverage/depth")
+            print("#gene\tlength_coverage/depth\tgene_type")
             for key, item in genes.items():
-                print(key + '\t' + str(item))
+                print(key + '\t' + str(item) + '\t' + get_gene_type(key))
             if mode == "a":
                 print("---------- BLAST GENE HITS ----------")
                 print("#seqid\tslen\tlength\tsstart\tsend\tpident")
