@@ -43,7 +43,7 @@ def SB13_detect(genes):
     return 'Unknown'
 
 def plasmid_genes(genes):
-    plasmid = ["acp", "icsA (virG)","icsA","icsB","ipaA","ipaB","ipaC","ipaD","ipaJ","ipgA","ipgB1","pgC","ipgD","ipgE","ipgF","mxiA","mxiC","mxiD","mxiE","mxiG","mxiH","mxiI","mxiJ","mxiK","mxiL","mxiM","mxiN","spa13","spa15","spa24","spa29","spa32","spa33","spa40","spa47","spa9","virA","virB","virF"]
+    plasmid = ["acp", "icsA (virG)","icsA","icsB","ipaA","ipaB","ipaC","ipaD","ipaJ","ipgA","ipgB1","ipgC","ipgD","ipgE","ipgF","mxiA","mxiC","mxiD","mxiE","mxiG","mxiH","mxiI","mxiJ","mxiK","mxiL","mxiM","mxiN","spa13","spa15","spa24","spa29","spa32","spa33","spa40","spa47","spa9","virA","virB","virF"]
     inter = list(set(plasmid) & set(genes))
     return len(inter)
 
@@ -720,7 +720,7 @@ def get_gene_type(gene):
     gene_type = ""
 
     mlst = ["NC_000913.3:recA", "NC_000913.3:purA", "NC_000913.3:mdh", "NC_000913.3:icd", "NC_000913.3:gyrB", "NC_000913.3:fumC", "NC_000913.3:adk"]
-    plasmid = ["acp", "icsA (virG)","icsA","icsB","ipaA","ipaB","ipaC","ipaD","ipaJ","ipgA","ipgB1","pgC","ipgD","ipgE","ipgF","mxiA","mxiC","mxiD","mxiE","mxiG","mxiH","mxiI","mxiJ","mxiK","mxiL","mxiM","mxiN","spa13","spa15","spa24","spa29","spa32","spa33","spa40","spa47","spa9","virA","virB","virF"]
+    plasmid = ["acp", "icsA (virG)","icsA","icsB","ipaA","ipaB","ipaC","ipaD","ipaJ","ipgA","ipgB1","ipgC","ipgD","ipgE","ipgF","mxiA","mxiC","mxiD","mxiE","mxiG","mxiH","mxiI","mxiJ","mxiK","mxiL","mxiM","mxiN","spa13","spa15","spa24","spa29","spa32","spa33","spa40","spa47","spa9","virA","virB","virF"]
     if gene in mlst:
         gene_type = "House Keeping"
     elif "_fliC" in gene or "_wz" in gene:
@@ -906,10 +906,30 @@ def run_typing(dir, files, mode, threads, hits, ratios, output):
                 print(g)
             print("--------------------------------------------------------------------------------------------------------------")
 
+def check_deps(checkonly):
+    depslist = ["bwa","samtools"]
+    f = 0
+    for dep in depslist:
+        rc = subprocess.call(['which', dep],stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        if rc == 0:
+            print(f'{dep:<10}:{"installed":<10}')
+        else:
+            print(f'{dep:<10}:{"missing in path, Please install ":<10}{dep}')
+            f+=1
+    if f > 0:
+        print("\nOne or more dependencies are missing.")
+        sys.exit(1)
+    else:
+        print("\nAll dependencies present.")
+        if checkonly:
+            sys.exit(0)
+        else:
+            return
+
 def main():
     parser = argparse.ArgumentParser(
         usage='\nShigeiFinder.py -i <input_data1> <input_data2> ... OR\nShigeiFinder.py -i <directory/*> OR \nShigeiFinder.py -i <Read1> <Read2> -r [Raw Reads]\n')
-    parser.add_argument("-i", nargs="+", required=True, help="<string>: path/to/input_data")
+    parser.add_argument("-i", nargs="+", help="<string>: path/to/input_data")
     parser.add_argument("-r", action='store_true', help="Add flag if file is raw reads.")
     parser.add_argument("-t", nargs=1,type=int, default='4', help="number of threads. Default 4." )
     parser.add_argument("-hits", action='store_true', help="To show the blast/alignment hits")
@@ -917,11 +937,21 @@ def main():
     parser.add_argument("-update_db", action='store_true', help="Add flag if you added new sequences to genes database.")
     parser.add_argument("--output",
                         help="output file to write to (if not used writes to stdout)")
+    parser.add_argument("--check", action='store_true', help="To show the blast/alignment hits")
     args = parser.parse_args()
+
+
+
 
     if args.dratio and not args.r:
         parser.error("-dratio requires -r. Only applies for raw reads.")
+    if not args.i:
+        parser.error("-i is required")
 
+    if args.check:
+        check_deps(True)
+    else:
+        check_deps(False)
     # Directory current script is in
     dir = os.path.dirname(os.path.realpath(__file__))
 
