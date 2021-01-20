@@ -940,18 +940,17 @@ def main():
     parser.add_argument("--check", action='store_true', help="To show the blast/alignment hits")
     args = parser.parse_args()
 
-
-
+    if args.check:
+        check_deps(True)
 
     if args.dratio and not args.r:
         parser.error("-dratio requires -r. Only applies for raw reads.")
     if not args.i:
         parser.error("-i is required")
 
-    if args.check:
-        check_deps(True)
-    else:
+    if not args.check:
         check_deps(False)
+
     # Directory current script is in
     dir = os.path.dirname(os.path.realpath(__file__))
 
