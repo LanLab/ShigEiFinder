@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python
 # Developer: Thanh Nguyen
 import argparse
 import os
@@ -581,32 +581,33 @@ def mapping_mode(bam, mpileup):
     depth_cut = mapping_depth_cutoff(bam)
     sb610_snp = sb610_snps(mpileup)
     wfep = wfep_indel(mpileup)
+    non_ipah_cut = 10
 
     for line in bam:
         info = line.split('\t')
         if len(info) > 1 and '#rname' not in line:
             gene = gene_rename(info[0])
-            depth = float(info[5]) # Meant to the percentage length cov calculated by samtools coverage
+            lenperc = float(info[5]) # Meant to the percentage length cov calculated by samtools coverage
             meandepth = float(info[6])
 
             # If the mapping ratio is < 10%
-            if gene is 'ipaH' and 100*meandepth/depth_cut < 1:
+            if gene == 'ipaH' and 100*meandepth/depth_cut < 1:
                 continue
-            elif 100*meandepth/depth_cut < 1: #'group' in gene and
+            elif 100*meandepth/depth_cut < non_ipah_cut: #'group' in gene and
                 continue
 
-            if gene == 'ipaH' and depth > 10: 
-                genes_set[gene] = depth
+            if gene == 'ipaH' and lenperc > 10:
+                genes_set[gene] = lenperc
             elif 'group_5563' == gene and float(info[4]) > 253:
-                genes_set[gene] = depth
+                genes_set[gene] = lenperc
             elif 'group_2201' == gene and float(info[4]) > 250.99:
-                genes_set[gene] = depth
+                genes_set[gene] = lenperc
             elif 'group_4025' == gene and float(info[4]) > 392:
-                genes_set[gene] = depth
-            elif 'group' in gene and depth > 49.99: # THIS IS FOR CLUSTER SPECFIC
-                genes_set[gene] = depth
-            elif 'group' not in gene and depth >= 50:
-                genes_set[gene] = depth
+                genes_set[gene] = lenperc
+            elif 'group' in gene and lenperc > 49.99: # THIS IS FOR CLUSTER SPECFIC
+                genes_set[gene] = lenperc
+            elif 'group' not in gene and lenperc >= 50:
+                genes_set[gene] = lenperc
         
     if "SB6_wzx" in genes_set.keys() and "SB10_wzx" in genes_set.keys():
         if sb610_snp["wzx"] == "G":
