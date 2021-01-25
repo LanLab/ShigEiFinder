@@ -907,21 +907,21 @@ def run_typing(dir, files, mode, threads, hits, ratios, output):
                 print(g)
             print("--------------------------------------------------------------------------------------------------------------")
 
-def check_deps(checkonly):
-    depslist = ["bwa","samtools"]
+def check_deps(checkonly,args):
+    depslist = ["bwa","samtools","blastn"]
     f = 0
     for dep in depslist:
         rc = subprocess.call(['which', dep],stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         if rc == 0:
-            print(f'{dep:<10}:{"installed":<10}')
+            sys.stderr.write(f'{dep:<10}:{"installed":<10}\n')
         else:
-            print(f'{dep:<10}:{"missing in path, Please install ":<10}{dep}')
+            sys.stderr.write(f'{dep:<10}:{"missing in path, Please install ":<10}{dep}\n')
             f+=1
     if f > 0:
-        print("\nOne or more dependencies are missing.")
+        sys.stderr.write("One or more dependencies are missing.\n")
         sys.exit(1)
     else:
-        print("\nAll dependencies present.")
+        sys.stderr.write("All dependencies present.\n")
         if checkonly:
             sys.exit(0)
         else:
@@ -952,7 +952,7 @@ def main():
         sys.exit()
 
     if args.check:
-        check_deps(True)
+        check_deps(True,args)
 
     if args.dratio and not args.r:
         parser.error("-dratio requires -r. Only applies for raw reads.")
@@ -960,7 +960,7 @@ def main():
         parser.error("-i is required")
 
     if not args.check:
-        check_deps(False)
+        check_deps(False,args)
 
 
 
