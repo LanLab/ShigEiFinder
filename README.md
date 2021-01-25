@@ -25,9 +25,9 @@ git clone https://github.com/LanLab/ShigEiFinder.git
 ````
 Make sure that you have the dependencies installed.
 
-## Option 2: Conda environment package
+## Option 2: Conda environment package (not yet available - working on it!)
 ````
-conda install shigeifinder
+conda install -c bioconda shigeifinder
 ````
 
 ---
