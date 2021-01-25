@@ -788,17 +788,19 @@ def run_blast(dir, fileA):
     return blast_hits
 
 def three_properties(genes):
-    num = 0
+    ipah = False
+    virplas = False
+    clustgenes = False
     if ipaH_detect(genes.keys()):
-        num += 1
+        ipah = True
     
     if plasmid_genes(genes.keys()) >= 26:
-        num += 1
+        virplas = True
     
     if determine_cluster(genes) != "Unknown Cluster":
-        num += 1
+        clustgenes = True
 
-    return num
+    return ipah,virplas,clustgenes
 
 def run_typing(dir, files, mode, threads, hits, ratios, output):
     result = {}
@@ -815,7 +817,8 @@ def run_typing(dir, files, mode, threads, hits, ratios, output):
         result['sample'] = os.path.basename(files).split('.')[0]
     # Check presecnce of ipaH, cluster & plasmid
     # if not ipaH_detect(genes.keys()) and determine_cluster(genes) == "Unknown Cluster" and plasmid_genes(genes.keys()) < 26:
-    if three_properties(genes) < 2 and SB13_detect(genes.keys()) == 'Unknown':
+    ipah, virplas, clustgenes = three_properties(genes)
+    if not ipah and SB13_detect(genes.keys()) == 'Unknown':
         result['ipaH'] = '-'
         result['plasmid'] = plasmid_genes(genes.keys())
         result['cluster'] = 'Not Shigella/EIEC'
@@ -825,15 +828,13 @@ def run_typing(dir, files, mode, threads, hits, ratios, output):
         result['notes'] = 'ipaH negative, cluster-specific genes negative and less than 26 plasmid genes'
     else:
         # Check for the ipaH gene, if negative check for SB13 genes
-        if ipaH_detect(genes.keys()) is False and SB13_detect(genes.keys()) != 'Unknown':
+        if not ipah and SB13_detect(genes.keys()) != 'Unknown':
             result['ipaH'] = '-'
             result['serotype'] = SB13_detect(genes.keys())
             result['cluster'] = "C"+SB13_detect(genes.keys())
             result['plasmid'] = plasmid_genes(genes.keys())
         else:
             result['ipaH'] = '+'
-            if ipaH_detect(genes.keys()) is False:
-                result['ipaH'] = '-'
             result['plasmid'] = plasmid_genes(genes.keys())
             # Identify Cluster
             # print(genes)
