@@ -444,7 +444,7 @@ def lcoverage_filter(genes):
     genes_set = {}
     for gene in genes:
         len_coverage = 100*genes[gene]['match']/genes[gene]['slength']
-        if gene == 'ipaH' and len_coverage > 10: 
+        if gene == 'ipaH' and len_coverage > 10:
             genes_set[gene] = len_coverage
         elif 'C1_gene_4' == gene and genes[gene]['match'] > 253:
             genes_set[gene] = len_coverage
@@ -590,9 +590,10 @@ def mapping_mode(bam, mpileup):
             meandepth = float(info[6])
 
             # If the mapping ratio is < 10%
+
             if gene == 'ipaH' and 100*meandepth/depth_cut < 1:
                 continue
-            elif 100*meandepth/depth_cut < non_ipah_cut: #'group' in gene and
+            elif gene != 'ipaH' and 100*meandepth/depth_cut < non_ipah_cut: #'group' in gene and
                 continue
 
             if gene == 'ipaH' and lenperc > 10:
