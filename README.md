@@ -34,11 +34,11 @@ conda install -c bioconda shigeifinder
 # Usage
 For genomes:
 ````
-python3 ShigeiFinder.py -i <inputs>...
+shigeifinder.py -i <inputs>...
 ````
 For raw reads:
 ````
-python3 ShigeiFinder.py -r -i <read1> <read2>...
+shigeifinder.py -r -i <read1> <read2>...
 ````
 
 ## Parameters Description
