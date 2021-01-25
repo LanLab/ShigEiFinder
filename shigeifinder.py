@@ -941,6 +941,16 @@ def main():
     parser.add_argument("--check", action='store_true', help="To show the blast/alignment hits")
     args = parser.parse_args()
 
+
+    # Directory current script is in
+    dir = os.path.dirname(os.path.realpath(__file__))
+
+    #run and get the intermediate files for blast and bwa (makes updating the genes db easier)
+    if args.update_db:
+        subprocess.run("bwa index " + dir + "/resources/genes.fasta >/dev/null 2>&1", shell=True)
+        subprocess.run('makeblastdb -in ' + dir + '/resources/genes.fasta -parse_seqids -blastdb_version 5 -title "Shigella/EIEC DB" -dbtype nucl >/dev/null 2>&1', shell=True)
+        sys.exit()
+
     if args.check:
         check_deps(True)
 
@@ -952,13 +962,7 @@ def main():
     if not args.check:
         check_deps(False)
 
-    # Directory current script is in
-    dir = os.path.dirname(os.path.realpath(__file__))
 
-    #run and get the intermediate files for blast and bwa (makes updating the genes db easier)
-    if args.update_db:
-        subprocess.run("bwa index " + dir + "/resources/genes.fasta >/dev/null 2>&1", shell=True)
-        subprocess.run('makeblastdb -in ' + dir + '/resources/genes.fasta -parse_seqids -blastdb_version 5 -title "Shigella/EIEC DB" -dbtype nucl >/dev/null 2>&1', shell=True)
 
     if len(sys.argv) == 1:
         os.system("python3.7 " + dir + "/ShigeiFinder.py -h")

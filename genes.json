@@ -1,6 +1,6 @@
 {
 	"C1": {
-		"cluster-genes": ["group_2132", "group_2201", "group_3681", "group_5563"],
+		"cluster-genes": ["group_2132", "group_2200", "group_3681", "group_5563"],
 		"SB1": ["SB1_wzx", "SB1_wzy"],
 		"SB2": ["SB2_wzx", "SB2_wzy"],
 		"SB3": ["SB3_wzx", "SB3_wzy"],
@@ -169,7 +169,7 @@
 	},
 	
 	"C9": {
-		"cluster-genes": ["group_12837","group_9613"],
+		"cluster-genes": ["group_13691","group_8005"],
 		"EIEC O8:H19": []
 
 	},
@@ -181,13 +181,13 @@
 	},
 
 	"CSD1": {
-		"cluster-genes": ["group_11015", "group_5881"],
+		"cluster-genes": ["group_11015", "group_3879"],
 		"SD1": []
 
 	},
 
 	"CSD8": {
-		"cluster-genes": ["group_3873", "group_5658"],
+		"cluster-genes": ["group_3873", "group_7589"],
 		"SD8": []
 
 	},
@@ -233,7 +233,7 @@
 		"CSP13": {"serotype": "O39:H49",	"cluster-genes": ["group_18182"]},
 		"CSP14": {"serotype": "O18ac:H7",	"cluster-genes": ["group_18993"]},
 		"CSP15": {"serotype": "H27",	"cluster-genes": ["group_19133"]},
-		"CSP16": {"serotype": "O4:H4",	"cluster-genes": ["group_19394"]},
+		"CSP16": {"serotype": "O4:H4",	"cluster-genes": ["group_19410"]},
 		"CSP17": {"serotype": "H2",	"cluster-genes": ["group_19948"]},
 		"CSP19": {"serotype": "O12:H4",	"cluster-genes": ["group_22794"]},
 		"CSP2": {"serotype": "O6:H16",	"cluster-genes": ["group_12871"]},
@@ -259,12 +259,12 @@
 		"CSP42": {"serotype": "H9",	"cluster-genes": ["group_26159"]},
 		"CSP43": {"serotype": "O117:H7",	"cluster-genes": ["group_26176"]},
 		"CSP44": {"serotype": "O36:H42",	"cluster-genes": ["group_26572"]},
-		"CSP45": {"serotype": "O110:H7",	"cluster-genes": ["group_27604"]},
+		"CSP45": {"serotype": "O110:H7",	"cluster-genes": ["group_27689"]},
 		"CSP46": {"serotype": "H12",	"cluster-genes": ["group_27816"]},
 		"CSP48": {"serotype": "O25:H4",	"cluster-genes": ["group_29290"]},
 		"CSP5": {"serotype": "H33",	"cluster-genes": ["group_16411"]},
 		"CSP50": {"serotype": "O124:H24",	"cluster-genes": ["group_30020"]},
-		"CSP51": {"serotype": "O183:H45,H6",	"cluster-genes": ["group_30145"]},
+		"CSP51": {"serotype": "O183:H45,H6",	"cluster-genes": ["group_30153"]},
 		"CSP52": {"serotype": "O71:H45",	"cluster-genes": ["group_30265"]},
 		"CSP6": {"serotype": "H45",	"cluster-genes": ["group_16487"]},
 		"CSP7": {"serotype": "H48",	"cluster-genes": ["group_16805"]},
