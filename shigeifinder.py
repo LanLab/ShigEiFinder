@@ -36,9 +36,9 @@ def ipaH_detect(genes):
     return False
 
 def SB13_detect(genes):
-    if 'group_8672' in genes:
+    if 'CSB13_gene' in genes:
         return 'SB13'
-    elif 'group_11816' in genes:
+    elif 'CSB13A_gene' in genes:
         return 'SB13-atypical'
     return 'Unknown'
 
@@ -258,9 +258,8 @@ def antigen_search(genes):
     return oa + ":" + ha
 
 def gene_rename(gene):
-    if re.search(r'.*\-(group\_[0-9].*)\-.*', gene) is not None:
-        temp = re.search(r'.*\-(group\_[0-9]+)\-.*', gene)  
-        return temp.group(1)  
+    if gene.startswith('C'):
+        return gene
     elif re.search(r'SF\-(.*)\_(.*)', gene) is not None:
         temp = re.search(r'SF\-(.*)\_(.*)', gene)
         return temp.group(1)
@@ -447,13 +446,13 @@ def lcoverage_filter(genes):
         len_coverage = 100*genes[gene]['match']/genes[gene]['slength']
         if gene == 'ipaH' and len_coverage > 10: 
             genes_set[gene] = len_coverage
-        elif 'group_5563' == gene and genes[gene]['match'] > 253:
+        elif 'C1_gene_4' == gene and genes[gene]['match'] > 253:
             genes_set[gene] = len_coverage
-        elif 'group_2201' == gene and genes[gene]['match'] > 250.99:
+        elif 'C1_gene_2' == gene and genes[gene]['match'] > 250.99:
             genes_set[gene] = len_coverage
-        elif 'group_4025' == gene and genes[gene]['match'] > 392:
+        elif 'C2_gene_1' == gene and genes[gene]['match'] > 392:
             genes_set[gene] = len_coverage
-        elif 'group' in gene and len_coverage > 49.99: # THIS IS FOR CLUSTER SPECFIC
+        elif gene.startswith('C') and len_coverage > 49.99: # THIS IS FOR CLUSTER SPECFIC
             genes_set[gene] = len_coverage
         elif gene == 'O124_wfep':
             # print(genes[gene])
@@ -463,7 +462,7 @@ def lcoverage_filter(genes):
                 continue
             elif len_coverage > 10:
                 genes_set[gene] = len_coverage
-        elif 'group' not in gene and len_coverage >= 50:
+        elif not gene.startswith('C') and len_coverage >= 50:
             genes_set[gene] = len_coverage
         
     sb610_blast_filter(genes, genes_set)
@@ -598,15 +597,15 @@ def mapping_mode(bam, mpileup):
 
             if gene == 'ipaH' and lenperc > 10:
                 genes_set[gene] = lenperc
-            elif 'group_5563' == gene and float(info[4]) > 253:
+            elif 'C1_gene_4' == gene and float(info[4]) > 253:
                 genes_set[gene] = lenperc
-            elif 'group_2201' == gene and float(info[4]) > 250.99:
+            elif 'C1_gene_2' == gene and float(info[4]) > 250.99:
                 genes_set[gene] = lenperc
-            elif 'group_4025' == gene and float(info[4]) > 392:
+            elif 'C2_gene_1' == gene and float(info[4]) > 392:
                 genes_set[gene] = lenperc
-            elif 'group' in gene and lenperc > 49.99: # THIS IS FOR CLUSTER SPECFIC
+            elif gene.startswith('C') and lenperc > 49.99: # THIS IS FOR CLUSTER SPECFIC
                 genes_set[gene] = lenperc
-            elif 'group' not in gene and lenperc >= 50:
+            elif not gene.startswith('C') and lenperc >= 50:
                 genes_set[gene] = lenperc
         
     if "SB6_wzx" in genes_set.keys() and "SB10_wzx" in genes_set.keys():
@@ -728,7 +727,7 @@ def get_gene_type(gene):
         gene_type = "O/H-antigen Specific"
     elif gene in plasmid:
         gene_type = "Virulence Plasmid"
-    elif "group" in gene:
+    elif gene.startswith('C'):
         gene_type = "Cluster-Specific"
 
     return gene_type
@@ -933,9 +932,9 @@ def main():
     parser.add_argument("-i", nargs="+", help="<string>: path/to/input_data")
     parser.add_argument("-r", action='store_true', help="Add flag if file is raw reads.")
     parser.add_argument("-t", nargs=1,type=int, default='4', help="number of threads. Default 4." )
-    parser.add_argument("-hits", action='store_true', help="To show the blast/alignment hits")
-    parser.add_argument("-dratio", action='store_true', help="To show the depth ratios of cluster-specific genes to House Keeping genes")
-    parser.add_argument("-update_db", action='store_true', help="Add flag if you added new sequences to genes database.")
+    parser.add_argument("--hits", action='store_true', help="To show the blast/alignment hits")
+    parser.add_argument("--dratio", action='store_true', help="To show the depth ratios of cluster-specific genes to House Keeping genes")
+    parser.add_argument("--update_db", action='store_true', help="Add flag if you added new sequences to genes database.")
     parser.add_argument("--output",
                         help="output file to write to (if not used writes to stdout)")
     parser.add_argument("--check", action='store_true', help="To show the blast/alignment hits")
