@@ -1,0 +1,2 @@
+global-include shigeifinder/*
+graft shigeifinder/resources

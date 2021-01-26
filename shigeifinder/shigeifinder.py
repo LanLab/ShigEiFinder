@@ -7,6 +7,7 @@ import subprocess
 import json
 import re
 import collections
+from pkg_resources import resource_filename
 
 def file_type(f, m):
     # print(os.path.splitext(f))
@@ -23,11 +24,23 @@ def file_type(f, m):
     return False
 
 def get_json_data():
-    curr_dir = os.path.dirname(os.path.realpath(__file__)) 
-    json_file = os.path.join(curr_dir, 'genes.json')
+    try:
+        json_file = resource_filename("shigeifinder","genes.json")
+    except:
+        curr_dir = os.path.dirname(os.path.realpath(__file__))
+        json_file = os.path.join(curr_dir, 'genes.json')
     with open(json_file) as f:
         data = json.load(f)
     return data
+
+def get_db_data():
+    try:
+        db_file = resource_filename("shigeifinder","resources/genes.fasta")
+    except:
+        curr_dir = os.path.dirname(os.path.realpath(__file__))
+        db_file = os.path.join(curr_dir, 'resources/genes.fasta')
+    # sys.stderr.write("db file location: " + db_file)
+    return db_file
 
 def ipaH_detect(genes):
     if 'ipaH' in genes:
@@ -735,11 +748,14 @@ def get_gene_type(gene):
 
 def run_mapping(dir,r1,r2,threads): 
     # Run mapping to gather genes
+    genesdb = get_db_data()
     coverage_mapped = []
     name = re.search(r'(.*)\_.*\.fastq.*', r1).group(1)
     bam_file = name + '.bam'
-    qry1 = 'bwa mem '+ dir +'/resources/genes.fasta ' + r1 + ' ' + r2 + ' -t ' + threads + \
-        '| samtools sort -@' + threads + ' -O bam -o ' + bam_file + ' - && samtools index ' + bam_file #| samtools coverage /dev/stdin'
+    qry1 = "bwa mem {gdb} {r1} {r2} -t {thread} | samtools sort -@ {thread} -O bam -o {bamfile} - " \
+           "&& samtools index {bamfile}".format(gdb=genesdb,r1=r1,r2=r2,thread=threads,bamfile=bam_file)
+    # qry1 = 'bwa mem '+ genesdb + ' ' + r1 + ' ' + r2 + ' -t ' + threads + \
+    #     '| samtools sort -@' + threads + ' -O bam -o ' + bam_file + ' - && samtools index ' + bam_file #| samtools coverage /dev/stdin'
 
     try:
         mapping = subprocess.check_output(qry1, shell=True, stderr=subprocess.STDOUT)
@@ -780,8 +796,9 @@ def run_mapping(dir,r1,r2,threads):
     
 def run_blast(dir, fileA):
     # Get all genes for ipaH & cluster genes
-    qry = 'blastn -db ' + dir + \
-        '/resources/genes.fasta -outfmt "6 sseqid slen length sstart send pident" -perc_identity 80 -query ' + \
+    genesdb = get_db_data()
+
+    qry = 'blastn -db ' + genesdb + ' -outfmt "6 sseqid slen length sstart send pident" -perc_identity 80 -query ' + \
         fileA
     blast_hits = subprocess.check_output(qry, shell=True, stderr=subprocess.STDOUT)
     blast_hits = blast_hits.decode("ascii").split('\n')
@@ -948,8 +965,9 @@ def main():
 
     #run and get the intermediate files for blast and bwa (makes updating the genes db easier)
     if args.update_db:
-        subprocess.run("bwa index " + dir + "/resources/genes.fasta >/dev/null 2>&1", shell=True)
-        subprocess.run('makeblastdb -in ' + dir + '/resources/genes.fasta -parse_seqids -blastdb_version 5 -title "Shigella/EIEC DB" -dbtype nucl >/dev/null 2>&1', shell=True)
+        dbpath = get_db_data()
+        subprocess.run("bwa index " + dbpath + " >/dev/null 2>&1", shell=True)
+        subprocess.run('makeblastdb -in ' + dbpath + ' -parse_seqids -blastdb_version 5 -title "Shigella/EIEC DB" -dbtype nucl >/dev/null 2>&1', shell=True)
         sys.exit()
 
     if args.check:

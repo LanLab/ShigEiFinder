@@ -2,7 +2,7 @@
 This is a tool that is used to identify differentiate *Shigella*/EIEC 
 using cluster-specific genes and identify the serotype using O-antigen/H-antigen genes. 
 This pipeline can serotype over 59 *Shigella* and 22 EIEC serotypes using either assembled whole genomes 
-or Whole Genome Sequencing (WGS) reads. The results are outputted in a tabular format which if saved as a 
+or Whole Genome Sequencing (WGS) reads. The results are output in a tabular format which if saved as a 
 file can be opened in Excel or other tabular programs. Also available as an [online tool](https://mgtdb.unsw.edu.au/ShigEiFinder/).
 
 Example:
