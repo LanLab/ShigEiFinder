@@ -22,6 +22,10 @@ ERR1000679	+	1	CSD1	SD1	SD1
 ## Option 1: Clone repository from gitHub
 ````
 git clone https://github.com/LanLab/ShigEiFinder.git
+
+cd ShigEiFinder
+
+python setup.py install
 ````
 Make sure that you have the dependencies installed.
 
@@ -34,11 +38,11 @@ conda install -c bioconda shigeifinder
 # Usage
 For genomes:
 ````
-shigeifinder.py -i <inputs>...
+shigeifinder -i <inputs>...
 ````
 For raw reads:
 ````
-shigeifinder.py -r -i <read1> <read2>...
+shigeifinder -r -i <read1> <read2>...
 ````
 
 ## Parameters Description
