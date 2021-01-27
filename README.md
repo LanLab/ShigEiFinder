@@ -29,7 +29,7 @@ python setup.py install
 ````
 Make sure that you have the dependencies installed.
 
-## Option 2: Conda environment package (not yet available - working on it!)
+## Option 2: Conda installation
 ````
 conda install -c bioconda shigeifinder
 ````
