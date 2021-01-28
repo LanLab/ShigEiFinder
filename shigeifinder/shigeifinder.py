@@ -588,12 +588,11 @@ def wfep_indel(mpileup):
     
     return result
 
-def mapping_mode(bam, mpileup):
+def mapping_mode(bam, mpileup,non_ipah_cut):
     genes_set = {}
     depth_cut = mapping_depth_cutoff(bam)
     sb610_snp = sb610_snps(mpileup)
     wfep = wfep_indel(mpileup)
-    non_ipah_cut = 10
 
     for line in bam:
         info = line.split('\t')
@@ -825,7 +824,7 @@ def run_typing(dir, files, mode, threads, hits, ratios, output):
     result['notes'] = ""
     if mode == "r":
         hit_results, depths = run_mapping(dir,files[0], files[1], threads)
-        genes = mapping_mode(hit_results, depths)
+        genes = mapping_mode(hit_results, depths,10)
         name = os.path.basename(files[1])
         result['sample'] = re.search(r'(.*)\_.*\.fastq\.gz', name).group(1)
     else:
@@ -863,6 +862,12 @@ def run_typing(dir, files, mode, threads, hits, ratios, output):
             elif cluster == "Unknown Cluster":
                 result['cluster'] = "Shigella/EIEC Unclustered"
                 result['serotype'] = antigen_search(genes)
+                if mode == "r":
+                    geneslowcov = mapping_mode(hit_results, depths, 1)
+                    clusterlowcov = determine_cluster(geneslowcov)
+                    serotypelowcov = antigen_search(geneslowcov)
+                    if clusterlowcov != "Unknown Cluster":
+                        result['notes'] = "Possible contamination by or low specific gene coverage of Shigella/EIEC strain in cluster {}, serotype {}. Some or all cluster specific gene to housekeeping genes ratios < 10%.".format(clusterlowcov,serotypelowcov)
             else:
                 result['cluster'] = cluster
                 # Determine Serotype
