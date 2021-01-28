@@ -51,7 +51,7 @@ shigeifinder -r -i <read1> <read2>...
 - ````--hits```` : provides the genes set that was used to identify the cluster and serotype as well as the original BLAST/mapping results.
 - ````--dratio````: displays the depth ratio of the depth of the cluster genes to the average depth of 7 HK genes
 - ````--update_db```` : updating the intermediate files for the genes database when new gene sequences have been added to the FASTA file
-- ````-t```` : number of threads used. The dedfault is 4.
+- ````-t```` : number of threads used. The default is 4.
 - ````--output````: output file to write to (if not used writes to stdout)
 - ````--check````: check that dependencies are found in path
 
