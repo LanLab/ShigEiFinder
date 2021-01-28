@@ -7,7 +7,7 @@ def readme():
 
 
 setup(name='shigeifinder',
-      version='1.1.0',
+      version='1.2.0',
       description='In silico clustering and serotyping of Shigella and Enteroinvasive E. coli',
       long_description=readme(),
       classifiers=[
