@@ -935,8 +935,21 @@ def check_deps(checkonly,args):
         else:
             sys.stderr.write(f'{dep:<10}:{"missing in path, Please install ":<10}{dep}\n')
             f+=1
+    db_path = resource_filename("shigeifinder","resources/genes.fasta")
+    if os.path.exists(db_path):
+        sys.stderr.write(f'{"resources/genes.fasta":<10}:{"file present":<10}\n')
+    else:
+        sys.stderr.write(f'{db_path:<10}:{"not at expected path, possible broken installation?":<10}\n')
+        f+=1
+    json_path = resource_filename("shigeifinder","genes.json")
+    if os.path.exists(json_path):
+        sys.stderr.write(f'{"genes.json":<10}:{"file present":<10}\n')
+    else:
+        sys.stderr.write(f'{json_path:<10}:{"not at expected path, possible broken installation?":<10}\n')
+        f+=1
+
     if f > 0:
-        sys.stderr.write("One or more dependencies are missing.\n")
+        sys.stderr.write("One or more dependencies are missing or install paths broken.\n")
         sys.exit(1)
     else:
         sys.stderr.write("All dependencies present.\n")
