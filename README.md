@@ -31,7 +31,7 @@ Make sure that you have the dependencies installed.
 
 ## Option 2: Conda installation
 ````
-conda install -c bioconda shigeifinder
+conda install -c conda-forge -c bioconda shigeifinder
 ````
 
 ---
