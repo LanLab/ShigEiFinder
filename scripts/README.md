@@ -50,7 +50,7 @@ dependencies:
  - biopython
 
 
-### prokka_genome_gene_from_roary.py
+### extract_gene_sequences_from_roary.py
 
 This script extracts specific gene set sequences for sets produced by clade_specific_gene_combinations.py. The script accepted 4 inputs: the presence absence roary output csv, the annotated genes in all genomes (as used in roary), a list of cluster specific genes sets and their corresponding cluster, a list of genome ids and their corresponding cluster. An output prefix is also required. The script will: 
  - select a representative genome from each cluster
