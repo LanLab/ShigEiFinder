@@ -1,4 +1,5 @@
-from time import sleep as sl
+#!/usr/bin/env python
+# Developer: Michael Payne
 import argparse
 from Bio import SeqIO
 import csv
