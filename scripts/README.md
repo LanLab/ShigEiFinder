@@ -2,7 +2,7 @@
 
 This folder contains scripts used in the shigeifinder [manuscript](https://www.biorxiv.org/content/10.1101/2021.01.30.428723v3) to identify and extract specific gene sets.
 
-### clade_specific_gene_comninations.py
+### clade_specific_gene_combinations.py
 This script was used to identify specific gene sets for each cluster from the pan genomes of the identification dataset. The script ran on one cluster at a time. The script takes in 4 inputs, a roary presence absence file, a genome cluster assignment file, the genomes of all isolates, the annotated genes in all genomes (as used in roary). The script first identified individual candidate genes that were present in all isolates of the target cluster (true positives) and were present only in a percentage of non-target cluster isolates (false positives). For the list of candidates each combination of genes was tested to see whether all are found in the same false
 positive strain. If a set of genes are never all found together then that set of genes is reported as a result. The size of the gene combinations starts at 1 for the whole list and increases progressively. At each size, successful sets of genes were reported until the total number of reported sets equals the maximum specified in the settings. Additionally, if a successful set of 2 genes (for example) was found within a subsequent set of 3 genes that three gene set was excluded because the additional gene provides no benefit.
 
