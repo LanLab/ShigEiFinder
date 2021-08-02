@@ -1,4 +1,5 @@
 # ShigEiFinder
+
 This is a tool that is used to identify differentiate *Shigella*/EIEC 
 using cluster-specific genes and identify the serotype using O-antigen/H-antigen genes. 
 This pipeline can serotype over 59 *Shigella* and 22 EIEC serotypes using either assembled whole genomes 
@@ -29,11 +30,11 @@ python setup.py install
 ````
 Make sure that you have the dependencies installed.
 
-## Option 2: Conda installation
+## Option 2: Conda installation  
 ````
 conda install -c conda-forge -c bioconda shigeifinder
 ````
-
+[![Anaconda-Server Badge](https://anaconda.org/bioconda/shigeifinder/badges/installer/conda.svg)](https://conda.anaconda.org/bioconda) [![Anaconda-Server Badge](https://anaconda.org/bioconda/shigeifinder/badges/downloads.svg)](https://anaconda.org/bioconda/shigeifinder) [![Anaconda-Server Badge](https://anaconda.org/bioconda/shigeifinder/badges/version.svg)](https://anaconda.org/bioconda/shigeifinder)
 ---
 # Usage
 For genomes:
