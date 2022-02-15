@@ -48,7 +48,7 @@ shigeifinder -r -i <read1> <read2>...
 
 ## Parameters Description
 - ````-i```` : Input files list provided with their paths. Either genomes or read files can be used
-- ````-r```` : Used to indicate that raw read files are inputed. Make sure that the reads are put in the order of read1 and then read2
+- ````-r```` : Used to indicate that raw read files are input. Make sure that the reads are put in the order of read1 and then read2
 - ````--hits```` : provides the genes set that was used to identify the cluster and serotype as well as the original BLAST/mapping results.
 - ````--dratio````: displays the depth ratio of the depth of the cluster genes to the average depth of 7 HK genes
 - ````--update_db```` : updating the intermediate files for the genes database when new gene sequences have been added to the FASTA file
