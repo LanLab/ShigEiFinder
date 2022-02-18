@@ -594,11 +594,9 @@ def get_oantigen_geneids(data):
         if c != "sporadic":
             for genesetname,geneset in data[c].items():
                 if genesetname != "cluster-genes" and isinstance(geneset,list):
-                    print(genesetname,geneset)
                     ogenels.append(geneset)
                 elif genesetname != "cluster-genes":
                     for subgenesetname,subgeneset in geneset.items():
-                        print(subgenesetname,subgeneset)
                         ogenels.append(subgeneset)
     return ogenels
 
@@ -768,15 +766,14 @@ def run_mapping(dir,r1,r2,threads):
     coverage_mapped = []
     name = re.search(r'(.*)\_.*\.fastq.*', r1).group(1)
     bam_file = name + '.bam'
-    qry1 = "bwa mem {gdb} {r1} {r2} -t {thread} | samtools sort -@ {thread} -O bam -o {bamfile} - " \
+    qry1 = "bwa mem -t {thread} {gdb} {r1} {r2}  | samtools sort -@ {thread} -O bam -o {bamfile} - " \
            "&& samtools index {bamfile}".format(gdb=genesdb,r1=r1,r2=r2,thread=threads,bamfile=bam_file)
     # qry1 = 'bwa mem '+ genesdb + ' ' + r1 + ' ' + r2 + ' -t ' + threads + \
     #     '| samtools sort -@' + threads + ' -O bam -o ' + bam_file + ' - && samtools index ' + bam_file #| samtools coverage /dev/stdin'
-
     try:
         mapping = subprocess.check_output(qry1, shell=True, stderr=subprocess.STDOUT)
     except subprocess.CalledProcessError as exc:
-        print(exc.output)
+        print(exc.output.decode('ascii'))
     
     qry2 = 'samtools coverage ' + bam_file
     try:
@@ -990,7 +987,7 @@ def main():
         usage='\nShigeiFinder.py -i <input_data1> <input_data2> ... OR\nShigeiFinder.py -i <directory/*> OR \nShigeiFinder.py -i <Read1> <Read2> -r [Raw Reads]\n')
     parser.add_argument("-i", nargs="+", help="<string>: path/to/input_data")
     parser.add_argument("-r", action='store_true', help="Add flag if file is raw reads.")
-    parser.add_argument("-t", nargs=1,type=int, default='4', help="number of threads. Default 4." )
+    parser.add_argument("-t", type=int, default='4', help="number of threads. Default 4.")
     parser.add_argument("--hits", action='store_true', help="To show the blast/alignment hits")
     parser.add_argument("--dratio", action='store_true', help="To show the depth ratios of cluster-specific genes to House Keeping genes")
     parser.add_argument("--update_db", action='store_true', help="Add flag if you added new sequences to genes database.")
