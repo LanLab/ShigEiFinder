@@ -1096,7 +1096,7 @@ def main():
                 outp.close()
             else:
                 print("#SAMPLE\tipaH\tVIRULENCE_PLASMID\tCLUSTER\tSEROTYPE\tO_ANTIGEN\tH_ANTIGEN\tNOTES")
-            run_typing(dir, args.i, mode, str(args.t), args.hits, args.dratio,args.output)
+            run_typing(dir, args.i, mode, args)
         else:
             # Run assembled genome version
             if args.output:
@@ -1112,12 +1112,12 @@ def main():
                 for f in list_files:
                     path = dir1 + "/" + f
                     if file_type(path, mode):
-                        run_typing(dir, path, mode, str(args.t), args.hits, args.dratio,args.output)
+                        run_typing(dir, path, mode, args)
             elif len(args.i) > 1:
                 for f in args.i:
-                    run_typing(dir, f, mode, str(args.t), args.hits, args.dratio,args.output)
+                    run_typing(dir, f, mode, args)
             else:
-                run_typing(dir, args.i[0], mode, str(args.t), args.hits, args.dratio,args.output)
+                run_typing(dir, args.i[0], mode, args)
             
 if __name__ == '__main__':
     main()
