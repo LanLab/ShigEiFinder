@@ -588,12 +588,27 @@ def wfep_indel(mpileup):
     
     return result
 
-def mapping_mode(bam, mpileup,non_ipah_cut):
+def get_oantigen_geneids(data):
+    ogenels = []
+    for c in data:
+        if c != "sporadic":
+            for genesetname,geneset in data[c].items():
+                if genesetname != "cluster-genes" and isinstance(geneset,list):
+                    print(genesetname,geneset)
+                    ogenels.append(geneset)
+                elif genesetname != "cluster-genes":
+                    for subgenesetname,subgeneset in geneset.items():
+                        print(subgenesetname,subgeneset)
+                        ogenels.append(subgeneset)
+    return ogenels
+
+def mapping_mode(bam, mpileup,non_ipah_cut,args):
     genes_set = {}
     depth_cut = mapping_depth_cutoff(bam)
     sb610_snp = sb610_snps(mpileup)
     wfep = wfep_indel(mpileup)
-
+    data = get_json_data()
+    oantigenids = get_oantigen_geneids(data)
     for line in bam:
         info = line.split('\t')
         if len(info) > 1 and '#rname' not in line:
@@ -603,9 +618,11 @@ def mapping_mode(bam, mpileup,non_ipah_cut):
 
             # If the mapping ratio is < 10%
 
-            if gene == 'ipaH' and 100*meandepth/depth_cut < 1:
+            if gene == 'ipaH' and 100*meandepth/depth_cut < args.ipaH_depth:
                 continue
-            elif gene != 'ipaH' and 100*meandepth/depth_cut < non_ipah_cut: #'group' in gene and
+            elif gene in oantigenids and 100*meandepth/depth_cut < args.o_depth:
+                continue
+            elif gene != 'ipaH' and 100*meandepth/depth_cut < args.depth: #'group' in gene and
                 continue
 
             if gene == 'ipaH' and lenperc > 10:
@@ -745,7 +762,7 @@ def get_gene_type(gene):
 
     return gene_type
 
-def run_mapping(dir,r1,r2,threads): 
+def run_mapping(dir,r1,r2,threads):
     # Run mapping to gather genes
     genesdb = get_db_data()
     coverage_mapped = []
@@ -819,12 +836,17 @@ def three_properties(genes):
 
     return ipah,virplas,clustgenes
 
-def run_typing(dir, files, mode, threads, hits, ratios, output):
+def run_typing(dir, files, mode,args):
+    threads = str(args.t)
+    hits = args.hits
+    ratios = args.dratio
+    output = args.output
+
     result = {}
     result['notes'] = ""
     if mode == "r":
         hit_results, depths = run_mapping(dir,files[0], files[1], threads)
-        genes = mapping_mode(hit_results, depths,10)
+        genes = mapping_mode(hit_results, depths, 10, args)
         name = os.path.basename(files[1])
         result['sample'] = re.search(r'(.*)\_.*\.fastq\.gz', name).group(1)
     else:
@@ -863,7 +885,7 @@ def run_typing(dir, files, mode, threads, hits, ratios, output):
                 result['cluster'] = "Shigella/EIEC Unclustered"
                 result['serotype'] = antigen_search(genes)
                 if mode == "r":
-                    geneslowcov = mapping_mode(hit_results, depths, 1)
+                    geneslowcov = mapping_mode(hit_results, depths, 1, args)
                     clusterlowcov = determine_cluster(geneslowcov)
                     serotypelowcov = antigen_search(geneslowcov)
                     if clusterlowcov != "Unknown Cluster":
@@ -975,6 +997,12 @@ def main():
     parser.add_argument("--output",
                         help="output file to write to (if not used writes to stdout)")
     parser.add_argument("--check", action='store_true', help="To show the blast/alignment hits")
+    parser.add_argument("--o_depth", type=float, default=10, help="When using reads as input the minimum depth percentage relative to genome average for positive O antigen gene call")
+    parser.add_argument("--ipaH_depth", type=float,
+                        help="When using reads as input the minimum depth percentage relative to genome average "
+                             "for positive ipaH gene call", default=1.0)
+    parser.add_argument("--depth", type=float,
+                        help="When using reads as input the minimum read depth for non ipaH/Oantigen gene to be called", default=10.0)
     args = parser.parse_args()
 
 
@@ -1041,7 +1069,7 @@ def main():
                         print("#SAMPLE\tipaH\tVIRULENCE_PLASMID\tCLUSTER\tSEROTYPE\tO_ANTIGEN\tH_ANTIGEN\tNOTES")
                     while i < len(reads):
                         f = [reads[i], reads[i+1]]
-                        run_typing(dir, f, mode, str(args.t), args.hits, args.dratio,args.output)
+                        run_typing(dir, f, mode, args)
                         i += 2
                     sys.exit()
                 else:
@@ -1058,7 +1086,7 @@ def main():
                     print("#SAMPLE\tipaH\tVIRULENCE_PLASMID\tCLUSTER\tSEROTYPE\tO_ANTIGEN\tH_ANTIGEN\tNOTES")
                 while i < len(args.i):
                     f = [files[i], files[i+1]]
-                    run_typing(dir, f, mode, str(args.t), args.hits, args.dratio,args.output)
+                    run_typing(dir, f, mode, args)
                     i += 2
                     # print(i, f)
                 sys.exit()
