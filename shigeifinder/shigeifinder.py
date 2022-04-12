@@ -10,7 +10,6 @@ import collections
 from pkg_resources import resource_filename
 
 def file_type(f, m):
-    # print(os.path.splitext(f))
     if m == 'a' and os.path.splitext(f)[-1] == ".fasta":
       return True
     elif m == 'a' and os.path.splitext(f)[-1] == ".fa":
@@ -18,7 +17,6 @@ def file_type(f, m):
     elif m == 'a' and os.path.splitext(f)[-1] == ".fna":
       return True
     elif m == 'r':
-        # ext = '.'.join(f.split('.')[-2:])
         if f.endswith('.fastq.gz') or f.endswith('.fastq'):
             return True
     return False
@@ -44,7 +42,6 @@ def get_db_data():
 
 def ipaH_detect(genes):
     if 'ipaH' in genes:
-        # print("ipaH(+)")
         return True
     return False
 
@@ -64,11 +61,11 @@ def type_cluster3(genes, data):
     gtr = ["gtrI", "gtrIC", "gtrII", "gtrIV", "gtrV", "gtrX"]
     opt = ["optIII", "optII"]
     oac = ["oac", "oac1b", "oacB", "oacC", "oacD"]
-    g_list = ["SF1-5_wzx", "SF1-5_wzy"]
+    g_list = ["SF1-5_wzx"]
     type_list = {}
 
     if "SBP_wzx" in genes.keys() and "SBP_wzy" in genes.keys():
-        type_list["SB-E1621-54"] = ["SBP_wzx", "SBP_wzy"]
+        type_list["SB22"] = ["SBP_wzx", "SBP_wzy"]
     elif all(item in genes.keys() for item in g_list):
         if not any(item in genes.keys() for item in gtr) and not any(item in genes.keys() for item in opt) and not any(item in genes.keys() for item in oac):
             type_list["SFY"] = g_list
@@ -80,26 +77,19 @@ def type_cluster3(genes, data):
                     type_list["SFY"] = data["C3"]["SFY"]["v1"]
                 elif all(item in genes.keys() for item in data["C3"]["SFY"]["v2"]):
                     type_list["SFY"] = data["C3"]["SFY"]["v2"]
+                elif all(item in genes.keys() for item in data["C3"]["SFY"]["v3"]):
+                    type_list["SFY"] = data["C3"]["SFY"]["v3"]
                 elif all(item in genes.keys() for item in data["C3"]["SFYv"]["v1"]):
                     type_list["SFYv"] = data["C3"]["SFYv"]["v1"]
                 elif all(item in genes.keys() for item in data["C3"]["SFYv"]["v2"]):
                     type_list["SFYv"] = data["C3"]["SFYv"]["v2"]
-                elif all(item in genes.keys() for item in data["C3"]["SFYv"]["v3"]):
-                    type_list["SFYv"] = data["C3"]["SFYv"]["v3"]
-                elif all(item in genes.keys() for item in data["C3"]["SFYv"]["v4"]):
-                    type_list["SFYv"] = data["C3"]["SFYv"]["v4"]
-                elif all(item in genes.keys() for item in data["C3"]["SFYv"]["v5"]):
-                    type_list["SFYv"] = data["C3"]["SFYv"]["v5"]
-                elif all(item in genes.keys() for item in data["C3"]["SFYv"]["v6"]):
-                    type_list["SFYv"] = data["C3"]["SFYv"]["v6"]
             else:
-                # print("SF1-5", genes)
                 for s in data["C3"]:
                     if s != "cluster-genes" and s != "SF3b" and s != "SFY" and s != "SFYv":
                         for t in data["C3"][s]:
                             if all(item in genes.keys() for item in data["C3"][s][t]):
                                 type_list[s] = data["C3"][s][t]
-    # print(type_list, genes)
+
     if len(type_list) > 1:
         if "SFX" in type_list.keys():
             del type_list["SFX"]
@@ -107,18 +97,49 @@ def type_cluster3(genes, data):
             del type_list["SF1a"]
         if "SF1a" in type_list.keys() and "SF1c (7a)" in type_list.keys():
             del type_list["SF1a"]
+        if "SF1a" in type_list.keys() and "SF1d" in type_list.keys():
+            del type_list["SF1a"]
         if "SF2a" in type_list.keys() and "SF2b" in type_list.keys():
             del type_list["SF2a"]
-        if "SF5a" in type_list.keys() and "SF5b" in type_list.keys():
-            del type_list["SF5a"]
+        if "SF3a" in type_list.keys() and "SF2b" in type_list.keys():
+            del type_list["SF3a"]
+        if "SF3a" in type_list.keys() and "SF5b" in type_list.keys():
+            del type_list["SF3a"]
+        if "SF3b" in type_list.keys() and "SF3a" in type_list.keys():
+            del type_list["SF3b"]
         if "SF4a" in type_list.keys() and "SF4b" in type_list.keys():
             del type_list["SF4a"]
         elif "SF4a" in type_list.keys() and "SF4av" in type_list.keys():
             del type_list["SF4a"]
-        elif "SF4b" in type_list.keys() and "SF4av" in type_list.keys():
+        elif "SF4b" in type_list.keys() and "SF4bv" in type_list.keys():
             del type_list["SF4b"]
-        if "SF3a" in type_list.keys() and "SF5b" in type_list.keys():
-            del type_list["SF3a"]
+        elif "SF4av" in type_list.keys() and "SF4bv" in type_list.keys():
+            del type_list["SF4av"]
+        if "SF5a" in type_list.keys() and "SF5b" in type_list.keys():
+            del type_list["SF5a"]
+        if "SFX" in type_list.keys() and "SF3a" in type_list.keys():
+            del type_list["SFX"]
+        if "SFX" in type_list.keys() and "SFXv (4c)" in type_list.keys():
+            del type_list["SFX"]
+        if "SFX" in type_list.keys() and "SF1d" in type_list.keys():
+            del type_list["SFX"]
+        if "SFX" in type_list.keys() and "SF2b" in type_list.keys():
+            del type_list["SFX"]
+        if "SFX" in type_list.keys() and "SF5b" in type_list.keys():
+            del type_list["SFX"]
+        if "SFY" in type_list.keys() and "SFYv" in type_list.keys():
+            del type_list["SFY"]
+        if "SFY" in type_list.keys() and "SF5a" in type_list.keys():
+            del type_list["SFY"]
+        if "SFY" in type_list.keys() and "SF3a" in type_list.keys():
+            del type_list["SFY"]
+        if "SFY" in type_list.keys() and "SF2b" in type_list.keys():
+            del type_list["SFY"]
+        if "SFY" in type_list.keys() and "SF2a" in type_list.keys():
+            del type_list["SFY"]
+        if "SFY" in type_list.keys() and "SF1a" in type_list.keys():
+            del type_list["SFY"]
+
     elif len(type_list) == 0:
         type_list["SF Unknown"] = list(set(genes).intersection(g_list))
         type_list["SF Unknown"].extend(set(genes).intersection(gtr))
@@ -128,7 +149,7 @@ def type_cluster3(genes, data):
     return type_list  
 
 def cluster3_notes(info):
-    genes = ["SF1-5_wzx", "SF1-5_wzy","oac", "oac1b", "oacB", "oacC", "oacD", "optIII", "optII", "gtrI", "gtrIC", "gtrII", "gtrIV", "gtrV", "gtrX"]
+    genes = ["SF1-5_wzx","oac", "oac1b", "oacB", "oacC", "oacD", "optIII", "optII", "gtrI", "gtrIC", "gtrII", "gtrIV", "gtrV", "gtrX"]
     if "SF Unknown" in info.keys():
         absent = list(set(genes)-set(info["SF Unknown"]))
         return "Genes found: " + ",".join(info["SF Unknown"]) + ";Not found: " + ",".join(absent) 
@@ -162,7 +183,6 @@ def determine_serotype(genes_, cluster):
         return ','.join(serotypes), ""
 
     genes = o_filter(cluster, genes_)
-    # print(genes)
     type_list = {}
     data = get_json_data()
     
@@ -171,12 +191,10 @@ def determine_serotype(genes_, cluster):
     elif cluster == 'C1' and sb610_present(genes):
         return "SB10", "Found a SB10 SNP"
     else:
-        # print(genes.keys())
         for s in data[cluster]:
             if s != "cluster-genes":
                 if all(item in genes.keys() for item in data[cluster][s]):
                     type_list[s] = data[cluster][s]
-    # print(type_list)
     if len(type_list) == 1:
         if list(type_list.keys())[0] == "SF Unknown":
             return list(type_list.keys())[0], cluster3_notes(type_list)
@@ -296,7 +314,7 @@ def get_oantigens(genes, cluster, search):
             return [serotype]
     elif cluster == "Shigella/EIEC Unclustered":
         for g in genes:
-            if '_wz' in g: #or '_wzy' in g:
+            if '_wz' in g:
                 name = re.search(r'(.*)\_(wz.*)', g).group(1)
                 if name in o:
                     o[name].append(g)
@@ -305,7 +323,7 @@ def get_oantigens(genes, cluster, search):
     else:
         cluster_antigens = oantigen_cluster_specific(cluster)
         for g in genes:
-            if '_wz' in g: #or '_wzy' in g:
+            if '_wz' in g:
                 name = re.search(r'(.*)\_(wz.*)', g).group(1)
                 if cluster in shigella_clusters and "O" in name and not search:
                     continue
@@ -319,8 +337,8 @@ def get_oantigens(genes, cluster, search):
                     continue
                 elif cluster != "C3" and g == "SF1-5_wzx":
                     continue
-                elif cluster != "C3" and g == "SF1-5_wzy":
-                    continue
+                # elif cluster != "C3" and g == "SF1-5_wzy":
+                #     continue
                 elif cluster == "C3" and "SB" in g and "SBP" not in g:
                     continue
                 o[name] = [ g ]
@@ -370,7 +388,6 @@ def oantigen_cluster_specific(cluster):
 def get_hantigens(genes, cluster, search):
     h_list = set()
     shigella_clusters = ["C1", "C2", "C3", "CSS", "CSB12", "CSB13", "CSB13-atypical", "CSD1", "CSD8", "CSD10"]
-    # print(genes)
     if cluster in shigella_clusters and not search:
         return []
     elif "," in cluster:
@@ -450,7 +467,6 @@ def blastn_cleanup(blast):
         genes_set[gene]['positions'] = list(range(start, end+1))
         genes_set[gene]['pident'] = perc_identity
 
-    # print('function:',genes_set['SB1_wzx'], genes_set['SB1_wzy'])
     return lcoverage_filter(genes_set)
 
 def lcoverage_filter(genes):
@@ -468,7 +484,6 @@ def lcoverage_filter(genes):
         elif gene.startswith('C') and len_coverage > 49.99: # THIS IS FOR CLUSTER SPECFIC
             genes_set[gene] = len_coverage
         elif gene == 'O124_wfep':
-            # print(genes[gene])
             if 429 not in genes[gene]['positions'] and 430 not in genes[gene]['positions']:
                 genes_set[gene] = 0
             elif genes[gene]['pident'] != 100:
@@ -485,7 +500,6 @@ def lcoverage_filter(genes):
 def sb610_blast_filter(genes, genes_set):
     if "SB6_wzx" in genes_set.keys() and "SB10_wzx" in genes_set.keys():
         if genes_set["SB6_wzx"] == genes_set["SB10_wzx"]:
-            # print("same", genes["SB6_wzx"]["pident"],genes["SB10_wzx"]["pident"])
             if 904 not in genes["SB10_wzx"]["positions"]:
                 del genes_set["SB10_wzx"]
             elif genes["SB6_wzx"]["pident"] != 100 and genes["SB10_wzx"]["pident"] == 100:
@@ -547,13 +561,11 @@ def sb610_snps(mpileup):
     for d in mpileup:
         info = d.split('\t')
         bases = info[4].lower()
-        # print(d, bases)
         if "wzx" in info[0]:
             wzx = collections.Counter(bases)
         elif "wzy" in info[0]:
             wzy = collections.Counter(bases)
-    
-    # print(wzx, wzy)
+
     common_wzx = [x[0] for x in wzx.most_common(1)]
     common_wzy = [x[0] for x in wzy.most_common(1)]
     if "g" in common_wzx:
@@ -561,7 +573,6 @@ def sb610_snps(mpileup):
     
     if "g" in common_wzy:
        result['wzy'] = 'G'
-    
     return result
 
 def wfep_indel(mpileup):
@@ -571,13 +582,11 @@ def wfep_indel(mpileup):
     for d in mpileup:
         info = d.split('\t')
         bases = info[4].lower()
-        # print(d, bases)
         if "O124_wfep" in info[0] and "429" in info[1]:
             p429 = collections.Counter(bases)
         elif "O124_wfep" in info[0] and "430" in info[1]:
             p430 = collections.Counter(bases)
-    
-    # print(wzx, wzy)
+
     common_429 = [x[0] for x in p429.most_common(1)]
     common_430 = [x[0] for x in p430.most_common(1)]
     if "*" in common_429:
@@ -588,24 +597,42 @@ def wfep_indel(mpileup):
     
     return result
 
-def mapping_mode(bam, mpileup,non_ipah_cut):
+def get_oantigen_geneids(data):
+    ogenels = []
+    for c in data:
+        if c != "sporadic":
+            for genesetname,geneset in data[c].items():
+                if genesetname != "cluster-genes" and isinstance(geneset,list):
+                    for gene in geneset:
+                        if gene not in ogenels:
+                            ogenels.append(gene)
+                elif genesetname != "cluster-genes":
+                    for subgenesetname,subgeneset in geneset.items():
+                        for gene in subgeneset:
+                            if gene not in ogenels:
+                                ogenels.append(gene)
+    return ogenels
+
+def mapping_mode(bam, mpileup,non_ipah_cut,args):
     genes_set = {}
     depth_cut = mapping_depth_cutoff(bam)
     sb610_snp = sb610_snps(mpileup)
     wfep = wfep_indel(mpileup)
-
+    data = get_json_data()
+    oantigenids = get_oantigen_geneids(data)
     for line in bam:
         info = line.split('\t')
         if len(info) > 1 and '#rname' not in line:
             gene = gene_rename(info[0])
             lenperc = float(info[5]) # Meant to the percentage length cov calculated by samtools coverage
             meandepth = float(info[6])
-
+            geneperccov = 100*meandepth/depth_cut
             # If the mapping ratio is < 10%
-
-            if gene == 'ipaH' and 100*meandepth/depth_cut < 1:
+            if gene == 'ipaH' and geneperccov < args.ipaH_depth:
                 continue
-            elif gene != 'ipaH' and 100*meandepth/depth_cut < non_ipah_cut: #'group' in gene and
+            elif gene in oantigenids and geneperccov < args.o_depth:
+                continue
+            elif gene != 'ipaH' and gene not in oantigenids and geneperccov < args.depth: #'group' in gene and
                 continue
 
             if gene == 'ipaH' and lenperc > 10:
@@ -620,7 +647,6 @@ def mapping_mode(bam, mpileup,non_ipah_cut):
                 genes_set[gene] = lenperc
             elif not gene.startswith('C') and lenperc >= 50:
                 genes_set[gene] = lenperc
-        
     if "SB6_wzx" in genes_set.keys() and "SB10_wzx" in genes_set.keys():
         if sb610_snp["wzx"] == "G":
             del genes_set["SB6_wzx"]
@@ -632,7 +658,6 @@ def mapping_mode(bam, mpileup,non_ipah_cut):
             del genes_set["SB6_wzy"]
         else:
             del genes_set["SB10_wzy"]
-    # print(genes_set)
 
     if "O124_wfep" in genes_set.keys():
         if wfep['429'] == "*" and wfep['430'] == "*":
@@ -649,7 +674,6 @@ def map_depth_ratios(bam):
         if len(info) > 1 and '#rname' not in line:
             gene = gene_rename(info[0])
             meandepth = float(info[6])
-            # if 'group' in gene or 'ipaH' in gene:
             ratio = 100*meandepth/depth_cut
             genes_set.append(gene + '\t' + str(ratio))
     return genes_set
@@ -665,7 +689,6 @@ def mapping_depth_cutoff(bam):
             meandepth = float(info[6])
             if gene in mlst:
                 depth += meandepth
-    # print("depth calc",depth)
     return depth/7
 
 def determine_cluster(genes):
@@ -676,13 +699,11 @@ def determine_cluster(genes):
     for s in data:
         if s != "sporadic":
             if all(item in genes.keys() for item in data[s]["cluster-genes"]):
-                # print(s, data[s]["cluster-genes"])
                 cluster_list[s] = data[s]["cluster-genes"]
     # Need to check if there is a sporadic(SP) cluster gene present if yes then it is the SP
     sporadic = sporadic_clusters(genes.keys())
     if sporadic != "Unknown":
         return "sporadic:" + sporadic
-    # print(cluster_list)
     if len(cluster_list) == 1:
         return list(cluster_list.keys())[0]
     elif 'C1' in cluster_list.keys() and 'CSB12' in cluster_list.keys():
@@ -703,7 +724,6 @@ def determine_cluster(genes):
         return 'CSB12'
     elif len(cluster_list) > 1:
         return ','.join(cluster_list.keys())
-    # print(cluster_list)
     return "Unknown Cluster"
 
 def sporadic_clusters(genes):
@@ -726,7 +746,6 @@ def string_result(res, output):
     if output:
         result += "\n"
 
-    # print(result)
     return result
 
 def get_gene_type(gene):
@@ -745,21 +764,18 @@ def get_gene_type(gene):
 
     return gene_type
 
-def run_mapping(dir,r1,r2,threads): 
+def run_mapping(dir,r1,r2,threads):
     # Run mapping to gather genes
     genesdb = get_db_data()
     coverage_mapped = []
     name = re.search(r'(.*)\_.*\.fastq.*', r1).group(1)
     bam_file = name + '.bam'
-    qry1 = "bwa mem {gdb} {r1} {r2} -t {thread} | samtools sort -@ {thread} -O bam -o {bamfile} - " \
+    qry1 = "bwa mem -t {thread} {gdb} {r1} {r2}  | samtools sort -@ {thread} -O bam -o {bamfile} - " \
            "&& samtools index {bamfile}".format(gdb=genesdb,r1=r1,r2=r2,thread=threads,bamfile=bam_file)
-    # qry1 = 'bwa mem '+ genesdb + ' ' + r1 + ' ' + r2 + ' -t ' + threads + \
-    #     '| samtools sort -@' + threads + ' -O bam -o ' + bam_file + ' - && samtools index ' + bam_file #| samtools coverage /dev/stdin'
-
     try:
         mapping = subprocess.check_output(qry1, shell=True, stderr=subprocess.STDOUT)
     except subprocess.CalledProcessError as exc:
-        print(exc.output)
+        print(exc.output.decode('ascii'))
     
     qry2 = 'samtools coverage ' + bam_file
     try:
@@ -773,15 +789,12 @@ def run_mapping(dir,r1,r2,threads):
         qry3 = 'samtools mpileup -r ' + pos + ' ' + bam_file
         try:
             mpileup = subprocess.check_output(qry3, shell=True, stderr=subprocess.STDOUT).decode("ascii").split('\n')
-            # print(depth)
             for m in mpileup:
                 if "[" not in m:
                     mpileups.append(m)
-            # mpileups.extend(mpileup)
             mpileups.remove('')
         except subprocess.CalledProcessError as exc:
             print(exc.output)
-    # print('\n'.join(depths))
 
     results = []
     for line in coverage_mapped:
@@ -801,7 +814,6 @@ def run_blast(dir, fileA):
         fileA
     blast_hits = subprocess.check_output(qry, shell=True, stderr=subprocess.STDOUT)
     blast_hits = blast_hits.decode("ascii").split('\n')
-    # print('\n'.join(blast_hits))
     return blast_hits
 
 def three_properties(genes):
@@ -819,12 +831,17 @@ def three_properties(genes):
 
     return ipah,virplas,clustgenes
 
-def run_typing(dir, files, mode, threads, hits, ratios, output):
+def run_typing(dir, files, mode,args):
+    threads = str(args.t)
+    hits = args.hits
+    ratios = args.dratio
+    output = args.output
+
     result = {}
     result['notes'] = ""
     if mode == "r":
         hit_results, depths = run_mapping(dir,files[0], files[1], threads)
-        genes = mapping_mode(hit_results, depths,10)
+        genes = mapping_mode(hit_results, depths, 10, args)
         name = os.path.basename(files[1])
         result['sample'] = re.search(r'(.*)\_.*\.fastq\.gz', name).group(1)
     else:
@@ -854,7 +871,6 @@ def run_typing(dir, files, mode, threads, hits, ratios, output):
             result['ipaH'] = '+'
             result['plasmid'] = plasmid_genes(genes.keys())
             # Identify Cluster
-            # print(genes)
             cluster = determine_cluster(genes)
             if "sporadic" in cluster:
                 result['cluster'] = cluster.split(':')[1]
@@ -863,7 +879,7 @@ def run_typing(dir, files, mode, threads, hits, ratios, output):
                 result['cluster'] = "Shigella/EIEC Unclustered"
                 result['serotype'] = antigen_search(genes)
                 if mode == "r":
-                    geneslowcov = mapping_mode(hit_results, depths, 1)
+                    geneslowcov = mapping_mode(hit_results, depths, 1, args)
                     clusterlowcov = determine_cluster(geneslowcov)
                     serotypelowcov = antigen_search(geneslowcov)
                     if clusterlowcov != "Unknown Cluster":
@@ -871,7 +887,6 @@ def run_typing(dir, files, mode, threads, hits, ratios, output):
             else:
                 result['cluster'] = cluster
                 # Determine Serotype
-                # print(result['sample'])
                 result['serotype'], result['notes'] = determine_serotype(genes, cluster)
         search = False
         if "Atypical" in result['notes']:
@@ -968,16 +983,20 @@ def main():
         usage='\nShigeiFinder.py -i <input_data1> <input_data2> ... OR\nShigeiFinder.py -i <directory/*> OR \nShigeiFinder.py -i <Read1> <Read2> -r [Raw Reads]\n')
     parser.add_argument("-i", nargs="+", help="<string>: path/to/input_data")
     parser.add_argument("-r", action='store_true', help="Add flag if file is raw reads.")
-    parser.add_argument("-t", nargs=1,type=int, default='4', help="number of threads. Default 4." )
+    parser.add_argument("-t", type=int, default='4', help="number of threads. Default 4.")
     parser.add_argument("--hits", action='store_true', help="To show the blast/alignment hits")
     parser.add_argument("--dratio", action='store_true', help="To show the depth ratios of cluster-specific genes to House Keeping genes")
     parser.add_argument("--update_db", action='store_true', help="Add flag if you added new sequences to genes database.")
     parser.add_argument("--output",
                         help="output file to write to (if not used writes to stdout)")
     parser.add_argument("--check", action='store_true', help="To show the blast/alignment hits")
+    parser.add_argument("--o_depth", type=float, default=10, help="When using reads as input the minimum depth percentage relative to genome average for positive O antigen gene call")
+    parser.add_argument("--ipaH_depth", type=float,
+                        help="When using reads as input the minimum depth percentage relative to genome average "
+                             "for positive ipaH gene call", default=1.0)
+    parser.add_argument("--depth", type=float,
+                        help="When using reads as input the minimum read depth for non ipaH/Oantigen gene to be called", default=10.0)
     args = parser.parse_args()
-
-
     # Directory current script is in
     dir = os.path.dirname(os.path.realpath(__file__))
 
@@ -1000,7 +1019,6 @@ def main():
         check_deps(False,args)
 
 
-
     if len(sys.argv) == 1:
         os.system("python3.7 " + dir + "/ShigeiFinder.py -h")
     else:
@@ -1017,7 +1035,7 @@ def main():
                 if not os.path.isfile(files):
                     sys.exit('Invalid Input File(s)! File Not Found:' + files)
                 if not file_type(files, mode):
-                    sys.exit('Incorrect File Type! File:' + files)   
+                    sys.exit('Incorrect File Type! File:' + files)
         if mode == 'r':
             # Run Raw Reads version
             # Check that there is 2 Reads inputed
@@ -1041,7 +1059,7 @@ def main():
                         print("#SAMPLE\tipaH\tVIRULENCE_PLASMID\tCLUSTER\tSEROTYPE\tO_ANTIGEN\tH_ANTIGEN\tNOTES")
                     while i < len(reads):
                         f = [reads[i], reads[i+1]]
-                        run_typing(dir, f, mode, str(args.t), args.hits, args.dratio,args.output)
+                        run_typing(dir, f, mode, args)
                         i += 2
                     sys.exit()
                 else:
@@ -1058,7 +1076,7 @@ def main():
                     print("#SAMPLE\tipaH\tVIRULENCE_PLASMID\tCLUSTER\tSEROTYPE\tO_ANTIGEN\tH_ANTIGEN\tNOTES")
                 while i < len(args.i):
                     f = [files[i], files[i+1]]
-                    run_typing(dir, f, mode, str(args.t), args.hits, args.dratio,args.output)
+                    run_typing(dir, f, mode, args)
                     i += 2
                     # print(i, f)
                 sys.exit()
@@ -1068,12 +1086,10 @@ def main():
                 outp.close()
             else:
                 print("#SAMPLE\tipaH\tVIRULENCE_PLASMID\tCLUSTER\tSEROTYPE\tO_ANTIGEN\tH_ANTIGEN\tNOTES")
-            run_typing(dir, args.i, mode, str(args.t), args.hits, args.dratio,args.output)
+            run_typing(dir, args.i, mode, args)
         else:
             # Run assembled genome version
             if args.output:
-                # print("testing")
-                # print(args.output)
                 outp = open(args.output, "w")
                 outp.write("#SAMPLE\tipaH\tVIRULENCE_PLASMID\tCLUSTER\tSEROTYPE\tO_ANTIGEN\tH_ANTIGEN\tNOTES\n")
                 outp.close()
@@ -1084,12 +1100,12 @@ def main():
                 for f in list_files:
                     path = dir1 + "/" + f
                     if file_type(path, mode):
-                        run_typing(dir, path, mode, str(args.t), args.hits, args.dratio,args.output)
+                        run_typing(dir, path, mode, args)
             elif len(args.i) > 1:
                 for f in args.i:
-                    run_typing(dir, f, mode, str(args.t), args.hits, args.dratio,args.output)
+                    run_typing(dir, f, mode, args)
             else:
-                run_typing(dir, args.i[0], mode, str(args.t), args.hits, args.dratio,args.output)
+                run_typing(dir, args.i[0], mode, args)
             
 if __name__ == '__main__':
     main()

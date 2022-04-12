@@ -7,12 +7,13 @@
 		"SB4": ["SB4_wzx", "SB4_wzy"],
 		"SB6": ["SB6_wzx", "SB6_wzy"],
 		"SB8": ["SB8_wzx", "SB8_wzy"],
-		"SB10": ["SB10_wzx", "SB10_wzy"], 
-		"SB11": ["SB11_wzx", "SB11_wzy"],
+		"SB10": ["SB10_wzx", "SB10_wzy","SB10-wbaM_wbaM"], 
+		"SB11": ["SB11_wzx"],
 		"SB14": ["SB14_wzx", "SB14_wzy"],
 		"SB18": ["SB18_wzx", "SB18_wzy"],
 		"SB19": ["SB19_wzx", "SB19_wzy"],
 		"SB20": ["SB1_wzx", "SB1_wzy", "CSB20_gene"],
+		"SB21": ["O180_wzx", "O180_wzy"],
 		"SD3": ["SD3_wzx", "SD3_wzy"],
 		"SD4": ["SD4_wzx", "SD4_wzy"],
 		"SD5": ["SD5_wzx", "SD5_wzy"],
@@ -24,8 +25,8 @@
 		"SD13": ["SD13_wzx", "SD13_wzy"],
 		"SD14": ["SD14_wzx", "SD14_wzy"],
 		"SD15": ["SD15_wzx", "SD15_wzy"],
-		"SD-96-265": ["SDP_wzx", "SDP_wzy"],
-		"SF6": ["SF6_wzx", "SF6_wzy"]
+		"SD16": ["SDP_wzx"],
+		"SF6": ["SF6_wzx"]
 	},
 
 	"C2": {
@@ -38,80 +39,79 @@
 		"SB16": ["SB16_wzx", "SB16_wzy"],
 		"SB17": ["SB17_wzx", "SB17_wzy"],
 		"SD2": ["SD2_wzx", "SD2_wzy"],
-		"SD-E670-74": ["SDPE_wzx", "SDPE_wzy"]
+		"SD18": ["SDPE_wzx", "SDPE_wzy"]
 	},
 
 	"C3": {
 		"cluster-genes": ["C3_gene_1", "C3_gene_2", "C3_gene_3"],
 		"SF1a": {
-			"v1": ["SF1-5_wzx", "SF1-5_wzy", "gtrI"],
-			"v2":["SF1-5_wzx", "SF1-5_wzy", "gtrI", "oacB"]
+			"v1": ["SF1-5_wzx", "gtrI"],
+			"v2":["SF1-5_wzx", "gtrI", "oacB"]
 		},
 		"SF1b": {
-			"v1": ["SF1-5_wzx", "SF1-5_wzy", "gtrI", "oac1b"],
-			"v2":["SF1-5_wzx", "SF1-5_wzy", "gtrI", "oac1b", "oacB"]
+			"v1": ["SF1-5_wzx", "gtrI", "oac1b"]
 		},
 		"SF1c (7a)": {
-			"v1": ["SF1-5_wzx", "SF1-5_wzy","gtrI", "gtrIC"]
+			"v1": ["SF1-5_wzx", "gtrI", "gtrIC"]
 		},
 		"SF1d": {
-			"v1": ["SF1-5_wzx", "SF1-5_wzy", "gtrI", "gtrX"]
+			"v1": ["SF1-5_wzx", "gtrI", "gtrX"]
 		},
 		"SF2a": {
-			"v1": ["SF1-5_wzx", "SF1-5_wzy", "gtrII"],
-			"v2":["SF1-5_wzx", "SF1-5_wzy", "gtrII", "oacB", "oacD"]
+			"v1": ["SF1-5_wzx", "gtrII"],
+			"v2":["SF1-5_wzx", "gtrII", "oacB"],
+			"v3":["SF1-5_wzx", "gtrII", "oacD"],
+			"v4":["SF1-5_wzx", "gtrII", "oacB", "oacD"]
 		},
 		"SF2b": {
-			"v1": ["SF1-5_wzx", "SF1-5_wzy","gtrII", "gtrX"],
-			"v2":["SF1-5_wzx", "SF1-5_wzy", "gtrII", "gtrX", "oacD"]
+			"v1": ["SF1-5_wzx", "gtrII", "gtrX"],
+			"v2":["SF1-5_wzx", "gtrII", "gtrX", "oacD"]
 		},
 		"SF3a": {
-			"v1": ["SF1-5_wzx", "SF1-5_wzy","gtrX","oac"],
-			"v2":["SF1-5_wzx", "SF1-5_wzy", "gtrX","oac", "oacD"]
+			"v1": ["SF1-5_wzx", "gtrX", "oac"],
+			"v2":["SF1-5_wzx", "gtrX"," oacD"],
+			"v3":["SF1-5_wzx", "gtrX", "oac", "oacD"]
 		},
 		"SF3b": {
-			"v1": ["SF1-5_wzx", "SF1-5_wzy","oac"]
+			"v1": ["SF1-5_wzx","oac"]
 		},
 		"SF4a": {
-			"v1": ["SF1-5_wzx", "SF1-5_wzy", "gtrIV"]
+			"v1": ["SF1-5_wzx", "gtrIV"]
 		},
 		"SF4av": {
-			"v1": ["SF1-5_wzx", "SF1-5_wzy", "gtrIV", "optIII"]
+			"v1": ["SF1-5_wzx", "gtrIV", "optIII"]
 		},
 		"SF4b": {
-			"v1": ["SF1-5_wzx", "SF1-5_wzy", "gtrIV", "oac"]
+			"v1": ["SF1-5_wzx", "gtrIV", "oac"]
 		},
+		"SF4bv": {
+			"v1": ["SF1-5_wzx", "gtrIV", "oac", "optIII"]
+		},		
 		"SF5a": {
-			"v1": ["SF1-5_wzx", "SF1-5_wzy", "gtrV"],
-			"v2":["SF1-5_wzx", "SF1-5_wzy", "gtrV", "oacB"]
+			"v1": ["SF1-5_wzx", "gtrV", "oacB"],
+			"v2":["SF1-5_wzx", "gtrV"]
 		},
 		"SF5b": {
-			"v1": ["SF1-5_wzx", "SF1-5_wzy","gtrV", "gtrX"]
+			"v1": ["SF1-5_wzx", "gtrV", "gtrX"]
 		},
 		"SF7b": {
-			"v1": ["SF1-5_wzx", "SF1-5_wzy", "gtrIC"],
-			"v2":["SF1-5_wzx", "SF1-5_wzy", "gtrIC", "oac"]
+			"v1": ["SF1-5_wzx", "gtrIC", "oac"]
 		},
 		"SFX": {
-			"v1": ["SF1-5_wzx", "SF1-5_wzy", "gtrX"],
-			"v2":["SF1-5_wzx", "SF1-5_wzy", "gtrX", "oacD"]
+			"v1": ["SF1-5_wzx", "gtrX"]			
 		},
 		"SFXv (4c)": {
-			"v1": ["SF1-5_wzx", "SF1-5_wzy", "gtrX", "optIII"],
-			"v2":["SF1-5_wzx", "SF1-5_wzy", "gtrX", "optIII", "oacD"]
+			"v1": ["SF1-5_wzx", "gtrX", "optII"],
+			"v2":["SF1-5_wzx", "gtrX", "optII"]
 		},
 		"SFY": {
-			"v1": ["SF1-5_wzx", "SF1-5_wzy", "oacB"],
-			"v2":["SF1-5_wzx", "SF1-5_wzy","oacB","oacD"],
-			"v3":["SF1-5_wzx", "SF1-5_wzy"]
+			"v1": ["SF1-5_wzx", "oacB"],
+			"v2":["SF1-5_wzx", "oacD"],
+			"v3":["SF1-5_wzx", "oacB", "oacD"]	
 		},
 		"SFYv": {
-			"v1": ["SF1-5_wzx", "SF1-5_wzy", "oacD", "optIII"],
-			"v2":["SF1-5_wzx", "SF1-5_wzy", "oacD", "optIII", "optII"],
-			"v3":["SF1-5_wzx", "SF1-5_wzy","optIII", "optII"],
-			"v4":["SF1-5_wzx", "SF1-5_wzy","optIII"],
-			"v5":["SF1-5_wzx", "SF1-5_wzy", "optII"],
-			"v6":["SF1-5_wzx", "SF1-5_wzy", "oacD", "optII"]
+			"v1": ["SF1-5_wzx", "optII", "optIII"],
+			"v2":["SF1-5_wzx", "oacD", "optIII", "optII"]
 		}
 
 	},
