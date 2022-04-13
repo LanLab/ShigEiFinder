@@ -1,9 +1,10 @@
 # ShigEiFinder
+
 This is a tool that is used to identify differentiate *Shigella*/EIEC 
 using cluster-specific genes and identify the serotype using O-antigen/H-antigen genes. 
 This pipeline can serotype over 59 *Shigella* and 22 EIEC serotypes using either assembled whole genomes 
 or Whole Genome Sequencing (WGS) reads. The results are output in a tabular format which if saved as a 
-file can be opened in Excel or other tabular programs. Also available as an [online tool](https://mgtdb.unsw.edu.au/ShigEiFinder/) and in a [preprint](https://www.biorxiv.org/content/10.1101/2021.01.30.428723v3).
+file can be opened in Excel or other tabular programs. Also available as an [online tool](https://mgtdb.unsw.edu.au/ShigEiFinder/) and published in [microbial genomics](https://www.microbiologyresearch.org/content/journal/mgen/10.1099/mgen.0.000704).
 
 Example:
 ````
@@ -29,11 +30,11 @@ python setup.py install
 ````
 Make sure that you have the dependencies installed.
 
-## Option 2: Conda installation
+## Option 2: Conda installation  
 ````
 conda install -c conda-forge -c bioconda shigeifinder
 ````
-
+[![Anaconda-Server Badge](https://anaconda.org/bioconda/shigeifinder/badges/installer/conda.svg)](https://conda.anaconda.org/bioconda) [![Anaconda-Server Badge](https://anaconda.org/bioconda/shigeifinder/badges/downloads.svg)](https://anaconda.org/bioconda/shigeifinder) [![Anaconda-Server Badge](https://anaconda.org/bioconda/shigeifinder/badges/version.svg)](https://anaconda.org/bioconda/shigeifinder)
 ---
 # Usage
 For genomes:
@@ -47,7 +48,7 @@ shigeifinder -r -i <read1> <read2>...
 
 ## Parameters Description
 - ````-i```` : Input files list provided with their paths. Either genomes or read files can be used
-- ````-r```` : Used to indicate that raw read files are inputed. Make sure that the reads are put in the order of read1 and then read2
+- ````-r```` : Used to indicate that raw read files are input. Make sure that the reads are put in the order of read1 and then read2
 - ````--hits```` : provides the genes set that was used to identify the cluster and serotype as well as the original BLAST/mapping results.
 - ````--dratio````: displays the depth ratio of the depth of the cluster genes to the average depth of 7 HK genes
 - ````--update_db```` : updating the intermediate files for the genes database when new gene sequences have been added to the FASTA file
