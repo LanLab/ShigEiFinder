@@ -843,7 +843,7 @@ def run_typing(dir, files, mode,args):
         hit_results, depths = run_mapping(dir,files[0], files[1], threads)
         genes = mapping_mode(hit_results, depths, 10, args)
         name = os.path.basename(files[1])
-        result['sample'] = re.search(r'(.*)\_.*\.fastq\.gz', name).group(1)
+        result['sample'] = re.search(r'(.*)\_.*\.fastq[\.gz]?', name).group(1)
     else:
         hit_results = run_blast(dir,files)
         genes = blastn_cleanup(hit_results)
@@ -980,7 +980,7 @@ def check_deps(checkonly,args):
 
 def main():
     parser = argparse.ArgumentParser(
-        usage='\nShigeiFinder.py -i <input_data1> <input_data2> ... OR\nShigeiFinder.py -i <directory/*> OR \nShigeiFinder.py -i <Read1> <Read2> -r [Raw Reads]\n')
+        usage='\nAssembly fasta input/s:\n ShigeiFinder.py -i <input_data1> <input_data2> ... OR\n ShigeiFinder.py -i <directory/*> \nRaw read fastq(.gz) input/s:\n ShigeiFinder.py -r -i <Read1> <Read2> OR \n ShigeiFinder.py -r -i <directory/*> \n')
     parser.add_argument("-i", nargs="+", help="<string>: path/to/input_data")
     parser.add_argument("-r", action='store_true', help="Add flag if file is raw reads.")
     parser.add_argument("-t", type=int, default='4', help="number of threads. Default 4.")
@@ -990,12 +990,12 @@ def main():
     parser.add_argument("--output",
                         help="output file to write to (if not used writes to stdout)")
     parser.add_argument("--check", action='store_true', help="To show the blast/alignment hits")
-    parser.add_argument("--o_depth", type=float, default=10, help="When using reads as input the minimum depth percentage relative to genome average for positive O antigen gene call")
+    parser.add_argument("--o_depth", type=float, default=1.0, help="When using reads as input the minimum depth percentage relative to genome average for positive O antigen gene call (default 1.0).")
     parser.add_argument("--ipaH_depth", type=float,
                         help="When using reads as input the minimum depth percentage relative to genome average "
-                             "for positive ipaH gene call", default=1.0)
+                             "for positive ipaH gene call (default 1.0).", default=1.0)
     parser.add_argument("--depth", type=float,
-                        help="When using reads as input the minimum read depth for non ipaH/Oantigen gene to be called", default=10.0)
+                        help="When using reads as input the minimum read depth for non ipaH/Oantigen gene to be called (default 10.0).", default=10.0)
     args = parser.parse_args()
     # Directory current script is in
     dir = os.path.dirname(os.path.realpath(__file__))

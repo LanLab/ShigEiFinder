@@ -55,9 +55,9 @@ shigeifinder -r -i <read1> <read2>...
 - ````-t````: number of threads used. The default is 4.
 - ````--output````: output file to write to (if not used writes to stdout)
 - ````--check````: check that dependencies are found in path
-- ````--o_depth````: When using reads as input the minimum depth percentage relative to genome average for positive O antigen gene call
-- ````--ipaH_depth````: When using reads as input the minimum depth percentage relative to genome average for positive ipaH gene call
-- ````--depth````: When using reads as input the minimum read depth for non ipaH/Oantigen gene to be called
+- ````--o_depth````: When using reads as input the minimum depth percentage relative to genome average for positive O antigen gene call (default 1)
+- ````--ipaH_depth````: When using reads as input the minimum depth percentage relative to genome average for positive ipaH gene call (default 1)
+- ````--depth````: When using reads as input the minimum read depth for non ipaH/Oantigen gene to be called (default 10)
 
 ---
 # Troubleshooting
