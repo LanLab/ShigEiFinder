@@ -770,7 +770,8 @@ def run_mapping(args,dir,r1,r2,threads):
     coverage_mapped = []
 
     if args.single_end:
-        name = r1.replace(".fastq.gz","")
+        name = r1.replace(".fastq","")
+        name = name.replace(".gz", "")
         bam_file = name + '.bam'
         qry1 = "bwa mem -t {thread} {gdb} {r1}  | samtools sort -@ {thread} -O bam -o {bamfile} - " \
                "&& samtools index {bamfile}".format(gdb=genesdb,r1=r1,r2=r2,thread=threads,bamfile=bam_file)
@@ -851,7 +852,9 @@ def run_typing(dir, files, mode,args):
             hit_results, depths = run_mapping(args,dir,files,"", threads)
             genes = mapping_mode(hit_results, depths, 10, args)
             name = os.path.basename(files)
-            result['sample'] = name.replace(".fastq","").replace(".gz","")
+            name = name.replace(".fastq", "")
+            name = name.replace(".gz", "")
+            result['sample'] = name
         else:
             hit_results, depths = run_mapping(args,dir,files[0], files[1], threads)
             genes = mapping_mode(hit_results, depths, 10, args)
