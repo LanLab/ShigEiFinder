@@ -764,14 +764,21 @@ def get_gene_type(gene):
 
     return gene_type
 
-def run_mapping(dir,r1,r2,threads):
+def run_mapping(args,dir,r1,r2,threads):
     # Run mapping to gather genes
     genesdb = get_db_data()
     coverage_mapped = []
-    name = re.search(r'(.*)\_.*\.fastq.*', r1).group(1)
-    bam_file = name + '.bam'
-    qry1 = "bwa mem -t {thread} {gdb} {r1} {r2}  | samtools sort -@ {thread} -O bam -o {bamfile} - " \
-           "&& samtools index {bamfile}".format(gdb=genesdb,r1=r1,r2=r2,thread=threads,bamfile=bam_file)
+
+    if args.single_end:
+        name = r1.replace(".fastq.gz","")
+        bam_file = name + '.bam'
+        qry1 = "bwa mem -t {thread} {gdb} {r1}  | samtools sort -@ {thread} -O bam -o {bamfile} - " \
+               "&& samtools index {bamfile}".format(gdb=genesdb,r1=r1,r2=r2,thread=threads,bamfile=bam_file)
+    else:
+        name = re.search(r'(.*)\_.*\.fastq.*', r1).group(1)
+        bam_file = name + '.bam'
+        qry1 = "bwa mem -t {thread} {gdb} {r1} {r2}  | samtools sort -@ {thread} -O bam -o {bamfile} - " \
+               "&& samtools index {bamfile}".format(gdb=genesdb,r1=r1,r2=r2,thread=threads,bamfile=bam_file)
     try:
         mapping = subprocess.check_output(qry1, shell=True, stderr=subprocess.STDOUT)
     except subprocess.CalledProcessError as exc:
@@ -840,10 +847,16 @@ def run_typing(dir, files, mode,args):
     result = {}
     result['notes'] = ""
     if mode == "r":
-        hit_results, depths = run_mapping(dir,files[0], files[1], threads)
-        genes = mapping_mode(hit_results, depths, 10, args)
-        name = os.path.basename(files[1])
-        result['sample'] = re.search(r'(.*)\_.*\.fastq[\.gz]?', name).group(1)
+        if args.single_end:
+            hit_results, depths = run_mapping(args,dir,files,"", threads)
+            genes = mapping_mode(hit_results, depths, 10, args)
+            name = os.path.basename(files)
+            result['sample'] = name.replace(".fastq","").replace(".gz","")
+        else:
+            hit_results, depths = run_mapping(args,dir,files[0], files[1], threads)
+            genes = mapping_mode(hit_results, depths, 10, args)
+            name = os.path.basename(files[1])
+            result['sample'] = re.search(r'(.*)\_.*\.fastq[\.gz]?', name).group(1)
     else:
         hit_results = run_blast(dir,files)
         genes = blastn_cleanup(hit_results)
@@ -978,12 +991,21 @@ def check_deps(checkonly,args):
         else:
             return
 
+def write_header(outpath):
+    if outpath:
+        outp = open(outpath, "w")
+        outp.write("#SAMPLE\tipaH\tVIRULENCE_PLASMID\tCLUSTER\tSEROTYPE\tO_ANTIGEN\tH_ANTIGEN\tNOTES\n")
+        outp.close()
+    else:
+        print("#SAMPLE\tipaH\tVIRULENCE_PLASMID\tCLUSTER\tSEROTYPE\tO_ANTIGEN\tH_ANTIGEN\tNOTES")
+
 def main():
     parser = argparse.ArgumentParser(
-        usage='\nAssembly fasta input/s:\n ShigeiFinder.py -i <input_data1> <input_data2> ... OR\n ShigeiFinder.py -i <directory/*> \nRaw read fastq(.gz) input/s:\n ShigeiFinder.py -r -i <Read1> <Read2> OR \n ShigeiFinder.py -r -i <directory/*> \n')
-    parser.add_argument("-i", nargs="+", help="<string>: path/to/input_data")
+        usage='\nAssembly fasta input/s:\n ShigeiFinder.py -i <input_data1> <input_data2> ... OR\n ShigeiFinder.py -i <directory/*> \nPaired end raw read fastq(.gz) input/s:\n ShigeiFinder.py -r -i <Read1> <Read2> OR \n ShigeiFinder.py -r -i <directory/*> \nSingle end raw read fastq(.gz) input/s:\n ShigeiFinder.py -r --single_end -i <Reads> OR \n ShigeiFinder.py -r --single_end -i <directory/*>\n')
+    parser.add_argument("-i", nargs="+", help="<string>: path/to/input_data",required=True)
     parser.add_argument("-r", action='store_true', help="Add flag if file is raw reads.")
     parser.add_argument("-t", type=int, default='4', help="number of threads. Default 4.")
+    parser.add_argument("--single_end", action='store_true', help="Add flag if raw reads are single end rather than paired.")
     parser.add_argument("--hits", action='store_true', help="To show the blast/alignment hits")
     parser.add_argument("--dratio", action='store_true', help="To show the depth ratios of cluster-specific genes to House Keeping genes")
     parser.add_argument("--update_db", action='store_true', help="Add flag if you added new sequences to genes database.")
@@ -997,6 +1019,7 @@ def main():
     parser.add_argument("--depth", type=float,
                         help="When using reads as input the minimum read depth for non ipaH/Oantigen gene to be called (default 10.0).", default=10.0)
     args = parser.parse_args()
+
     # Directory current script is in
     dir = os.path.dirname(os.path.realpath(__file__))
 
@@ -1012,15 +1035,13 @@ def main():
 
     if args.dratio and not args.r:
         parser.error("-dratio requires -r. Only applies for raw reads.")
-    if not args.i:
-        parser.error("-i is required")
 
     if not args.check:
         check_deps(False,args)
 
 
     if len(sys.argv) == 1:
-        os.system("python3.7 " + dir + "/ShigeiFinder.py -h")
+        os.system("python3 " + dir + "/ShigeiFinder.py -h")
     else:
         mode = 'a'
         if args.r:
@@ -1039,7 +1060,7 @@ def main():
         if mode == 'r':
             # Run Raw Reads version
             # Check that there is 2 Reads inputed
-            if len(args.i) < 2 or len(args.i) % 2 != 0:
+            if (len(args.i) < 2 or len(args.i) % 2 != 0) and not args.single_end:
                 if "*" in args.i[0] and len(args.i) == 1:
                     samples = set()
                     for files in os.listdir(dir1):
@@ -1049,52 +1070,41 @@ def main():
                     # print(samples)
                     reads = sorted(samples)
                     if len(reads) % 2 != 0:
-                        sys.exit('Missing Input File(s)!!')
+                        sys.exit('Missing Input File(s)!! if you are using single end reads use the --single_end flag')
                     i = 0
-                    if args.output:
-                        outp = open(args.output,"w")
-                        outp.write("#SAMPLE\tipaH\tVIRULENCE_PLASMID\tCLUSTER\tSEROTYPE\tO_ANTIGEN\tH_ANTIGEN\tNOTES\n")
-                        outp.close()
-                    else:
-                        print("#SAMPLE\tipaH\tVIRULENCE_PLASMID\tCLUSTER\tSEROTYPE\tO_ANTIGEN\tH_ANTIGEN\tNOTES")
+                    write_header(args.output)
                     while i < len(reads):
                         f = [reads[i], reads[i+1]]
                         run_typing(dir, f, mode, args)
                         i += 2
                     sys.exit()
                 else:
-                    sys.exit('Missing Input File(s)!!')
-            elif len(args.i) > 2:
+                    sys.exit('Missing Input File(s)!! if you are using single end reads use the --single_end flag')
+            elif len(args.i) > 2 and not args.single_end:
                 files = sorted(args.i)
                 # print(files)
                 i = 0
-                if args.output:
-                    outp = open(args.output, "w")
-                    outp.write("#SAMPLE\tipaH\tVIRULENCE_PLASMID\tCLUSTER\tSEROTYPE\tO_ANTIGEN\tH_ANTIGEN\tNOTES\n")
-                    outp.close()
-                else:
-                    print("#SAMPLE\tipaH\tVIRULENCE_PLASMID\tCLUSTER\tSEROTYPE\tO_ANTIGEN\tH_ANTIGEN\tNOTES")
+                write_header(args.output)
                 while i < len(args.i):
                     f = [files[i], files[i+1]]
                     run_typing(dir, f, mode, args)
                     i += 2
                     # print(i, f)
                 sys.exit()
-            if args.output:
-                outp = open(args.output, "w")
-                outp.write("#SAMPLE\tipaH\tVIRULENCE_PLASMID\tCLUSTER\tSEROTYPE\tO_ANTIGEN\tH_ANTIGEN\tNOTES\n")
-                outp.close()
-            else:
-                print("#SAMPLE\tipaH\tVIRULENCE_PLASMID\tCLUSTER\tSEROTYPE\tO_ANTIGEN\tH_ANTIGEN\tNOTES")
+            elif args.single_end:
+                write_header(args.output)
+                files=list(args.i)
+                i=0
+                while i < len(args.i):
+                    f = files[i]
+                    run_typing(dir, f, mode, args)
+                    i += 1
+                sys.exit()
+            write_header(args.output)
             run_typing(dir, args.i, mode, args)
         else:
             # Run assembled genome version
-            if args.output:
-                outp = open(args.output, "w")
-                outp.write("#SAMPLE\tipaH\tVIRULENCE_PLASMID\tCLUSTER\tSEROTYPE\tO_ANTIGEN\tH_ANTIGEN\tNOTES\n")
-                outp.close()
-            else:
-                print("#SAMPLE\tipaH\tVIRULENCE_PLASMID\tCLUSTER\tSEROTYPE\tO_ANTIGEN\tH_ANTIGEN\tNOTES")
+            write_header(args.output)
             if "*" in args.i[0]:
                 list_files = os.listdir(dir1)
                 for f in list_files:
