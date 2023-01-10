@@ -1005,7 +1005,7 @@ def write_header(outpath):
 def main():
     parser = argparse.ArgumentParser(
         usage='\nAssembly fasta input/s:\n ShigeiFinder.py -i <input_data1> <input_data2> ... OR\n ShigeiFinder.py -i <directory/*> \nPaired end raw read fastq(.gz) input/s:\n ShigeiFinder.py -r -i <Read1> <Read2> OR \n ShigeiFinder.py -r -i <directory/*> \nSingle end raw read fastq(.gz) input/s:\n ShigeiFinder.py -r --single_end -i <Reads> OR \n ShigeiFinder.py -r --single_end -i <directory/*>\n')
-    parser.add_argument("-i", nargs="+", help="<string>: path/to/input_data",required=True)
+    parser.add_argument("-i", nargs="+", help="<string>: path/to/input_data")
     parser.add_argument("-r", action='store_true', help="Add flag if file is raw reads.")
     parser.add_argument("-t", type=int, default='4', help="number of threads. Default 4.")
     parser.add_argument("--single_end", action='store_true', help="Add flag if raw reads are single end rather than paired.")
@@ -1038,6 +1038,8 @@ def main():
 
     if args.dratio and not args.r:
         parser.error("-dratio requires -r. Only applies for raw reads.")
+    if not args.i:
+        parser.error("-i is required")
 
     if not args.check:
         check_deps(False,args)
