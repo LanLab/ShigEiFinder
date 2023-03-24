@@ -8,6 +8,8 @@ import json
 import re
 import collections
 from pkg_resources import resource_filename
+import uuid
+import shutil
 
 def file_type(f, m):
     if m == 'a' and os.path.splitext(f)[-1] == ".fasta":
@@ -56,6 +58,18 @@ def plasmid_genes(genes):
     plasmid = ["acp", "icsA (virG)","icsA","icsB","ipaA","ipaB","ipaC","ipaD","ipaJ","ipgA","ipgB1","ipgC","ipgD","ipgE","ipgF","mxiA","mxiC","mxiD","mxiE","mxiG","mxiH","mxiI","mxiJ","mxiK","mxiL","mxiM","mxiN","spa13","spa15","spa24","spa29","spa32","spa33","spa40","spa47","spa9","virA","virB","virF"]
     inter = list(set(plasmid) & set(genes))
     return len(inter)
+
+def make_tmp_folder(args):
+    uid = str(uuid.uuid1())
+    fulltmp = args.tmpdir + "/shigeifinder_"+uid
+    if os.path.exists(fulltmp):
+        pass
+        # shutil.rmtree(reads2run)
+        # os.mkdir(reads2run)
+
+    else:
+        os.mkdir(fulltmp)
+    return fulltmp
 
 def type_cluster3(genes, data):
     gtr = ["gtrI", "gtrIC", "gtrII", "gtrIV", "gtrV", "gtrX"]
@@ -772,12 +786,14 @@ def run_mapping(args,dir,r1,r2,threads):
     if args.single_end:
         name = r1.replace(".fastq","")
         name = name.replace(".gz", "")
-        bam_file = name + '.bam'
+        name = os.path.basename(name)
+        bam_file = args.fulltmp + "/" + name + '.bam'
         qry1 = "bwa mem -t {thread} {gdb} {r1}  | samtools sort -@ {thread} -O bam -o {bamfile} - " \
                "&& samtools index {bamfile}".format(gdb=genesdb,r1=r1,r2=r2,thread=threads,bamfile=bam_file)
     else:
         name = re.search(r'(.*)\_.*\.fastq.*', r1).group(1)
-        bam_file = name + '.bam'
+        name = os.path.basename(name)
+        bam_file = args.fulltmp + "/" + name + '.bam'
         qry1 = "bwa mem -t {thread} {gdb} {r1} {r2}  | samtools sort -@ {thread} -O bam -o {bamfile} - " \
                "&& samtools index {bamfile}".format(gdb=genesdb,r1=r1,r2=r2,thread=threads,bamfile=bam_file)
     try:
@@ -844,7 +860,7 @@ def run_typing(dir, files, mode,args):
     hits = args.hits
     ratios = args.dratio
     output = args.output
-
+    args.fulltmp = make_tmp_folder(args)
     result = {}
     result['notes'] = ""
     if mode == "r":
@@ -865,6 +881,7 @@ def run_typing(dir, files, mode,args):
         genes = blastn_cleanup(hit_results)
         # print(genes)
         result['sample'] = os.path.basename(files).split('.')[0]
+    shutil.rmtree(args.fulltmp)
     # Check presecnce of ipaH, cluster & plasmid
     # if not ipaH_detect(genes.keys()) and determine_cluster(genes) == "Unknown Cluster" and plasmid_genes(genes.keys()) < 26:
     ipah, virplas, clustgenes = three_properties(genes)
@@ -961,6 +978,7 @@ def run_typing(dir, files, mode,args):
                 print(g)
             print("--------------------------------------------------------------------------------------------------------------")
 
+
 def check_deps(checkonly,args):
     depslist = ["bwa","samtools","blastn"]
     f = 0
@@ -994,13 +1012,15 @@ def check_deps(checkonly,args):
         else:
             return
 
-def write_header(outpath):
-    if outpath:
-        outp = open(outpath, "w")
-        outp.write("#SAMPLE\tipaH\tVIRULENCE_PLASMID\tCLUSTER\tSEROTYPE\tO_ANTIGEN\tH_ANTIGEN\tNOTES\n")
-        outp.close()
-    else:
-        print("#SAMPLE\tipaH\tVIRULENCE_PLASMID\tCLUSTER\tSEROTYPE\tO_ANTIGEN\tH_ANTIGEN\tNOTES")
+def write_header(args):
+    outpath = args.output
+    if not args.noheader:
+        if outpath:
+            outp = open(outpath, "w")
+            outp.write("#SAMPLE\tipaH\tVIRULENCE_PLASMID\tCLUSTER\tSEROTYPE\tO_ANTIGEN\tH_ANTIGEN\tNOTES\n")
+            outp.close()
+        else:
+            print("#SAMPLE\tipaH\tVIRULENCE_PLASMID\tCLUSTER\tSEROTYPE\tO_ANTIGEN\tH_ANTIGEN\tNOTES")
 
 def main():
     parser = argparse.ArgumentParser(
@@ -1021,6 +1041,10 @@ def main():
                              "for positive ipaH gene call (default 1.0).", default=1.0)
     parser.add_argument("--depth", type=float,
                         help="When using reads as input the minimum read depth for non ipaH/Oantigen gene to be called (default 10.0).", default=10.0)
+    parser.add_argument("--tmpdir", help="temporary folder to use for intermediate files",
+                        default="shigeifinder_tmp")
+    parser.add_argument("--noheader", help="do not print output header",
+                        action='store_true')
     args = parser.parse_args()
 
     # Directory current script is in
@@ -1041,8 +1065,8 @@ def main():
     if not args.i:
         parser.error("-i is required")
 
-    if not args.check:
-        check_deps(False,args)
+    # if not args.check:
+    #     check_deps(False,args)
 
 
     if len(sys.argv) == 1:
@@ -1077,7 +1101,7 @@ def main():
                     if len(reads) % 2 != 0:
                         sys.exit('Missing Input File(s)!! if you are using single end reads use the --single_end flag')
                     i = 0
-                    write_header(args.output)
+                    write_header(args)
                     while i < len(reads):
                         f = [reads[i], reads[i+1]]
                         run_typing(dir, f, mode, args)
@@ -1089,7 +1113,7 @@ def main():
                 files = sorted(args.i)
                 # print(files)
                 i = 0
-                write_header(args.output)
+                write_header(args)
                 while i < len(args.i):
                     f = [files[i], files[i+1]]
                     run_typing(dir, f, mode, args)
@@ -1097,7 +1121,7 @@ def main():
                     # print(i, f)
                 sys.exit()
             elif args.single_end:
-                write_header(args.output)
+                write_header(args)
                 files=list(args.i)
                 i=0
                 while i < len(args.i):
@@ -1105,11 +1129,11 @@ def main():
                     run_typing(dir, f, mode, args)
                     i += 1
                 sys.exit()
-            write_header(args.output)
+            write_header(args)
             run_typing(dir, args.i, mode, args)
         else:
             # Run assembled genome version
-            write_header(args.output)
+            write_header(args)
             if "*" in args.i[0]:
                 list_files = os.listdir(dir1)
                 for f in list_files:
