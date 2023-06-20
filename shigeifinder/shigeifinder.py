@@ -10,6 +10,10 @@ import collections
 from pkg_resources import resource_filename
 import uuid
 import shutil
+from shigeifinder import __version__
+
+# set version variable equal to value specifified in __init__.py
+version = __version__
 
 def file_type(f, m):
     if m == 'a' and os.path.splitext(f)[-1] == ".fasta":
@@ -1045,6 +1049,7 @@ def main():
                         default="shigeifinder_tmp")
     parser.add_argument("--noheader", help="do not print output header",
                         action='store_true')
+    parser.add_argument("-v","--version", help="Print version information.", action='version', version=f"shigeifinder {__version__}")
     args = parser.parse_args()
 
     # Directory current script is in
