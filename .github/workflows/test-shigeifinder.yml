@@ -52,7 +52,7 @@ jobs:
       - name: Test ShigEiFinder with optional output filename
         run: |
           cat SRX5006488_R1.fastq.gz SRX5006488_R2.fastq.gz > SRX5006488SE.fastq.gz
-          python3 -m shigeifinder.shigeifinder -r -i SRX5006488SE.fastq.gz --output SRX5006488.tsv --tmp .
+          python3 -m shigeifinder.shigeifinder -r --single_end -i SRX5006488SE.fastq.gz --output SRX5006488.tsv --tmp .
           ls "SRX5006488.tsv"
 
       # BioSample: https://www.ncbi.nlm.nih.gov/biosample/?term=SAMN10052838
