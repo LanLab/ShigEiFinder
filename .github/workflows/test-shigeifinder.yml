@@ -29,7 +29,7 @@ jobs:
           channel-priority: true
 
       - name: Setup mamba env
-        run: mamba install -y -c conda-forge -c bioconda 'fastq-dl>=2.0.1' 'python>=3.7.3' 'bwa>=0.7.17' 'samtools>=1.10' 'blast >=2.9.0'
+        run: mamba install -y -c conda-forge -c bioconda 'fastq-dl>=2.0.2' 'python>=3.7.3' 'bwa>=0.7.17' 'samtools>=1.10' 'blast >=2.9.0'
 
       - name: Environment Information
         run: uname -a && env
