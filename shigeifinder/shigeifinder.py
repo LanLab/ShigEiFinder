@@ -12,9 +12,6 @@ import uuid
 import shutil
 from shigeifinder import __version__
 
-# set version variable equal to value specifified in __init__.py
-version = __version__
-
 def file_type(f, m):
     if m == 'a' and os.path.splitext(f)[-1] == ".fasta":
       return True
