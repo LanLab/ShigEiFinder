@@ -1,5 +1,5 @@
 from setuptools import setup,find_packages
-
+from shigeifinder import __version__
 
 def readme():
     with open('README.md') as f:
@@ -7,7 +7,7 @@ def readme():
 
 
 setup(name='shigeifinder',
-      version='1.3.2',
+      version=__version__,
       description='In silico clustering and serotyping of Shigella and Enteroinvasive E. coli',
       long_description=readme(),
       classifiers=[

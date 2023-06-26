@@ -10,6 +10,7 @@ import collections
 from pkg_resources import resource_filename
 import uuid
 import shutil
+from shigeifinder import __version__
 
 def file_type(f, m):
     if m == 'a' and os.path.splitext(f)[-1] == ".fasta":
@@ -1042,9 +1043,10 @@ def main():
     parser.add_argument("--depth", type=float,
                         help="When using reads as input the minimum read depth for non ipaH/Oantigen gene to be called (default 10.0).", default=10.0)
     parser.add_argument("--tmpdir", help="temporary folder to use for intermediate files",
-                        default="shigeifinder_tmp")
+                        default=".")
     parser.add_argument("--noheader", help="do not print output header",
                         action='store_true')
+    parser.add_argument("-v","--version", help="Print version information.", action='version', version=f"shigeifinder {__version__}")
     args = parser.parse_args()
 
     # Directory current script is in
