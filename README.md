@@ -7,9 +7,10 @@ or Whole Genome Sequencing (WGS) reads. The results are output in a tabular form
 file can be opened in Excel or other tabular programs. Also available as an [online tool](https://mgtdb.unsw.edu.au/ShigEiFinder/) and published in [microbial genomics](https://www.microbiologyresearch.org/content/journal/mgen/10.1099/mgen.0.000704).
 
 Example:
+
 ````
-#SAMPLE	ipaH	VIRULENCE_PLASMID	CLUSTER	SEROTYPE	O_ANTIGEN	H_ANTIGEN	NOTES
-ERR1000679	+	1	CSD1	SD1	SD1		
+#SAMPLE     ipaH  VIRULENCE_PLASMID  CLUSTER  SEROTYPE  O_ANTIGEN  H_ANTIGEN  NOTES
+ERR1000679  +     1                  CSD1     SD1       SD1
 ````
 
 ---
