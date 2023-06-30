@@ -1035,7 +1035,7 @@ def main():
     parser.add_argument("--update_db", action='store_true', help="Add flag if you added new sequences to genes database.")
     parser.add_argument("--output",
                         help="output file to write to (if not used writes to stdout)")
-    parser.add_argument("--check", action='store_true', help="To show the blast/alignment hits")
+    parser.add_argument("--check", action='store_true', help="Check that dependencies are installed and required databases are available.")
     parser.add_argument("--o_depth", type=float, default=1.0, help="When using reads as input the minimum depth percentage relative to genome average for positive O antigen gene call (default 1.0).")
     parser.add_argument("--ipaH_depth", type=float,
                         help="When using reads as input the minimum depth percentage relative to genome average "
